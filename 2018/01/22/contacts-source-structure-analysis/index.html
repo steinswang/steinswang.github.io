@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Contacts源码结构分析 | steinswang</title>
+  <meta name="keywords" content=" android , contacts ">
+  <meta name="description" content="Contacts源码结构分析 | steinswang">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="144.202.122.98">
+<meta name="keywords" content="ssr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ssr-ip">
+<meta property="og:url" content="http://yoursite.com/2019/01/08/ssr-ip/index.html">
+<meta property="og:site_name" content="steinswang">
+<meta property="og:description" content="144.202.122.98">
+<meta property="og:updated_time" content="2019-01-15T05:32:37.516Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ssr-ip">
+<meta name="twitter:description" content="144.202.122.98">
+
+
+<link rel="icon" href="/img/avatar.jpg">
+
+<link rel="stylesheet" href="/css/style.css">
+
+<link rel="stylesheet" href="/css/hl_theme/atom-light.css">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/photoswipe/4.1.2/photoswipe.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/photoswipe/4.1.2/default-skin/default-skin.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js"></script>
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+</head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+</div>
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.jpg" />
+</a>
+<div class="author">
+    <span>steinswang</span>
+</div>
+
+<div class="icon">
+    
+    
+    <a class="github" title="github" href="https://github.com/steinswang" target="_blank"></a>
+    
+    
+    
+    
+    
+    
+    
+    
+    <a class="email" title="email" href="mailto:450603622@qq.com"></a>
+    
+</div>
+
+
+
+<ul>
+    <li class="all active">全部文章</li>
+    
+    <li data-rel="ssr"> ssr </li>
+    
+    <li data-rel="Android"> Android </li>
+    
+    <li data-rel="工具"> 工具 </li>
+    
+    <li data-rel="init"> init </li>
+    
+    <li data-rel="英语"> 英语 </li>
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="20">
+<input type="hidden" id="yelog_site_word_count" value="16.7k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode==13){return false;}">
+        <input class="search" type="text" placeholder="以 in: 开头进行全文搜索" autocomplete="off"id="local-search-input" >
+        <i class="cross"></i>
+        <span>
+        <label for="tagswitch">Tags:</label>
+        <input id="tagswitch" type="checkbox">
+    </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color4">ssr</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">android</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">binder</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">压缩</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">android2.3.1</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">gradle</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">面试</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">chrome</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color4">chrome-plugin</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">cm</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color5">lineageos</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color4">contacts</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color1">tools</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color5">hexo</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color5">blog</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color5">keys</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">3-hexo</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">english</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color1">正则表达式</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <div id="local-search-result">
+
+    </div>
+    
+    <nav id="title-list-nav">
+        
+        <a  class="ssr "
+           href="/2019/01/08/ssr-ip/"
+           data-tag="ssr"
+           data-author="" >
+            <span class="post-title" title="ssr-ip">ssr-ip</span>
+            <span class="post-date" title="2019-01-08 18:30:59">2019/01/08</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/02/01/binder/"
+           data-tag="android,binder"
+           data-author="" >
+            <span class="post-title" title="Binder机制">Binder机制</span>
+            <span class="post-date" title="2018-02-01 11:37:02">2018/02/01</span>
+        </a>
+        
+        <a  class="工具 "
+           href="/2016/01/15/zip-unzip-compare/"
+           data-tag="压缩"
+           data-author="" >
+            <span class="post-title" title="Linux常用压缩、解压对比">Linux常用压缩、解压对比</span>
+            <span class="post-date" title="2016-01-15 22:54:34">2016/01/15</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/08/13/android2.3.1-build/"
+           data-tag="android2.3.1"
+           data-author="" >
+            <span class="post-title" title="android2.3.1编译">android2.3.1编译</span>
+            <span class="post-date" title="2018-08-13 14:35:48">2018/08/13</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2017/01/15/gradle-issue/"
+           data-tag="gradle,面试"
+           data-author="" >
+            <span class="post-title" title="gradle问题">gradle问题</span>
+            <span class="post-date" title="2017-01-15 22:54:34">2017/01/15</span>
+        </a>
+        
+        <a  class="工具 "
+           href="/2016/08/13/chrome-plugin-location/"
+           data-tag="chrome,chrome-plugin"
+           data-author="" >
+            <span class="post-title" title="Chrome插件目录">Chrome插件目录</span>
+            <span class="post-date" title="2016-08-13 14:35:48">2016/08/13</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/01/05/Build-LineageOS-for-Nexus-5/"
+           data-tag="android,cm,lineageos"
+           data-author="" >
+            <span class="post-title" title="Build LineageOS for Nexus 5">Build LineageOS for Nexus 5</span>
+            <span class="post-date" title="2018-01-05 12:05:21">2018/01/05</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/01/22/substring-jump/"
+           data-tag="android"
+           data-author="" >
+            <span class="post-title" title="多语言下，String子串可点击并实现跳转">多语言下，String子串可点击并实现跳转</span>
+            <span class="post-date" title="2018-01-22 17:53:49">2018/01/22</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/01/15/import-Sim-card-contacts-when-boot/"
+           data-tag="android,面试,contacts"
+           data-author="" >
+            <span class="post-title" title="开机导入Sim卡联系人">开机导入Sim卡联系人</span>
+            <span class="post-date" title="2018-01-15 22:54:34">2018/01/15</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/01/01/contacts-phone-number-fuzzy-search/"
+           data-tag="android,contacts"
+           data-author="" >
+            <span class="post-title" title="联系人号码模糊查询">联系人号码模糊查询</span>
+            <span class="post-date" title="2018-01-01 11:37:02">2018/01/01</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2015/08/10/access-across-processes/"
+           data-tag="android,面试"
+           data-author="" >
+            <span class="post-title" title="跨进程通讯的4种方式">跨进程通讯的4种方式</span>
+            <span class="post-date" title="2015-08-10 22:45:19">2015/08/10</span>
+        </a>
+        
+        <a  class="init "
+           href="/2017/12/23/blog-init/"
+           data-tag="tools"
+           data-author="" >
+            <span class="post-title" title="blog init">blog init</span>
+            <span class="post-date" title="2017-12-23 14:53:20">2017/12/23</span>
+        </a>
+        
+        <a  class="工具 "
+           href="/2018/01/03/Hexo-GitHub-Pages-Establish-blog/"
+           data-tag="hexo,blog"
+           data-author="" >
+            <span class="post-title" title="Hexo+GitHub Pages搭建属于自己的blog">Hexo+GitHub Pages搭建属于自己的blog</span>
+            <span class="post-date" title="2018-01-03 20:34:01">2018/01/03</span>
+        </a>
+        
+        <a  class="工具 "
+           href="/2018/01/23/tool-softwares-and-plugins/"
+           data-tag="tools"
+           data-author="" >
+            <span class="post-title" title="工具软件&amp;插件">工具软件&amp;插件</span>
+            <span class="post-date" title="2018-01-23 14:53:20">2018/01/23</span>
+        </a>
+        
+        <a  class="工具 "
+           href="/2018/01/23/tool-software-keys/"
+           data-tag="tools,keys"
+           data-author="" >
+            <span class="post-title" title="工具软件keys">工具软件keys</span>
+            <span class="post-date" title="2018-01-23 14:35:48">2018/01/23</span>
+        </a>
+        
+        <a  class="工具 "
+           href="/2017/12/30/3-hexo-shortcuts/"
+           data-tag="hexo,3-hexo"
+           data-author="" >
+            <span class="post-title" title="快捷键说明">快捷键说明</span>
+            <span class="post-date" title="2017-12-30 16:45:31">2017/12/30</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/01/16/merge-contacts/"
+           data-tag="android,contacts"
+           data-author="" >
+            <span class="post-title" title="合并重复联系人">合并重复联系人</span>
+            <span class="post-date" title="2018-01-16 10:00:00">2018/01/16</span>
+        </a>
+        
+        <a  class="英语 "
+           href="/2018/01/22/food-politics-in-America/"
+           data-tag="english"
+           data-author="" >
+            <span class="post-title" title="001-Food politics in America">001-Food politics in America</span>
+            <span class="post-date" title="2018-01-22 21:14:37">2018/01/22</span>
+        </a>
+        
+        <a  class="工具 "
+           href="/2017/10/04/正则表达式详解/"
+           data-tag="正则表达式"
+           data-author="" >
+            <span class="post-title" title="正则表达式详解">正则表达式详解</span>
+            <span class="post-date" title="2017-10-04 09:41:40">2017/10/04</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/01/22/contacts-source-structure-analysis/"
+           data-tag="android,contacts"
+           data-author="" >
+            <span class="post-title" title="Contacts源码结构分析">Contacts源码结构分析</span>
+            <span class="post-date" title="2018-01-22 17:53:49">2018/01/22</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-contacts-source-structure-analysis" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Contacts源码结构分析</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+            <a href="javascript:" data-rel="Android">Android</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a href="javascript:" class="color3">android</a>
+            
+            <a href="javascript:" class="color4">contacts</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2019-01-15 13:32:37'>2018-01-22 17:53</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:4,538</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+        <span class="top-comment" title="跳转至评论区">
+            <a href="#comments">
+                评论:<span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </a>
+        </span>
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-简介"><span class="toc-text">1.简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-软件架构"><span class="toc-text">2.软件架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-各功能模块分析"><span class="toc-text">3. 各功能模块分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-联系人数据的显示"><span class="toc-text">3.1 联系人数据的显示</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-1-联系人列表显示"><span class="toc-text">3.1.1 联系人列表显示</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-2-联系人详细信息数据的显示"><span class="toc-text">3.1.2 联系人详细信息数据的显示</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-联系人数据的编辑和存储"><span class="toc-text">3.2 联系人数据的编辑和存储</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-编辑界面相关"><span class="toc-text">3.2.1 编辑界面相关</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Sim联系人数据的整合"><span class="toc-text">3.3 Sim联系人数据的整合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-SD卡备份-恢复联系人"><span class="toc-text">3.4 SD卡备份/恢复联系人</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-联系人搜索"><span class="toc-text">3.5 联系人搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6-Google联系人同步"><span class="toc-text">3.6 Google联系人同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-7-其他零碎功能"><span class="toc-text">3.7 其他零碎功能</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h2><p>联系人模块主要记录用户的联系人数据，方便用户快捷的操作和使用，主要包括本机联系人和Sim卡联系人。</p>
+<p>本机联系人主要存储在手机内部存储空间，Android平台上是通过数据库进行存储，使用ContentProvider组件封装，提供复杂的字段用于表示联系人数据，并提供用户快捷的操作，比如增加，删除，修改，查询等等。</p>
+<p>Sim卡联系人主要存储在Sim卡内部存储文件，包括adn、fdn、sdn。主要提供简单的字段用于表示联系人数据。并通过IccProvider提供的接口进行数据的增加、删除、修改、查询操作。</p>
+<h2 id="2-软件架构"><a href="#2-软件架构" class="headerlink" title="2.软件架构"></a>2.软件架构</h2><p>联系人Contacts应用主要包括3个部分:<br>Contacts主要响应用户的请求和交互，数据显示。<br>ContactsProvider继承自Android四大组件之一的ContentProvider组件，封装了对底层数据库contact2.db的添删改查。<br>SQLite在底层物理性地存储了联系人数据。</p>
+<p>主要交互流程如下图：</p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019032-3b7392de-9f10-11e8-8567-d4189730b46e.png" alt=""></p>
+<p>Contacts模块的主要7块功能：</p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019045-3d496fe8-9f10-11e8-8077-89235449ccd4.png" alt=""></p>
+<h2 id="3-各功能模块分析"><a href="#3-各功能模块分析" class="headerlink" title="3. 各功能模块分析"></a>3. 各功能模块分析</h2><h3 id="3-1-联系人数据的显示"><a href="#3-1-联系人数据的显示" class="headerlink" title="3.1 联系人数据的显示"></a>3.1 联系人数据的显示</h3><h4 id="3-1-1-联系人列表显示"><a href="#3-1-1-联系人列表显示" class="headerlink" title="3.1.1 联系人列表显示"></a>3.1.1 联系人列表显示</h4><p><code>简要说明：</code></p>
+<pre><code class="xml">* PeopleActivity类负责联系人列表的显示。
+
+* PeopleActivity包含4个Fragment，每个Fragment包含一个ListView。
+
+* 各个Fragment中ListView的Adapter（BaseAdapter的子类）负责将数据填充到ListView。
+
+* 各个Fragment的Loader类（CursorLoader的子类）负责加载数据。
+
+* 实现LoadertManager接口负责管理这些CursorLoader。
+</code></pre>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019049-3dc1ee1e-9f10-11e8-89f3-14dac608ea42.png" alt=""></p>
+<p><strong>为什么使用Loader？</strong></p>
+<pre><code class="xml">1. Loaders确保所有的cursor操作是异步的，从而排除了UI线程中堵塞的可能性。
+2. 当通过LoaderManager来管理，Loaders还可以在activity实例中保持当前的cursor数据，也就是不需要重新查询（比如，当因为横竖屏切换需要重新启动activity时）。
+3. 当数据改变时，Loaders可以自动检测底层数据的更新和重新检索。
+</code></pre>
+<p><strong>数据加载流程概览：</strong></p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019046-3d7130f0-9f10-11e8-945c-7a0eff02b65c.png" alt=""></p>
+<p><strong>流程具体分析：</strong></p>
+<p>先上图：<br><img src="https://user-images.githubusercontent.com/35097187/44019033-3ba1bba0-9f10-11e8-94f9-e41053c967b4.jpeg" alt=""></p>
+<p>进入Contacts应用，程序的主入口Activity是<code>PeopleActivity</code>。</p>
+<p>进入<code>onCreate</code>方法：</p>
+<p><code>createViewsAndFragments(savedState);</code></p>
+<p>此方法创建视图和Fragments，进入此方法：</p>
+<pre><code class="java">mFavoritesFragment = new ContactTileListFragment();
+mAllFragment = new DefaultContactBrowseListFragment();
+mGroupsFragment = new GroupBrowseListFragment();
+</code></pre>
+<p>发现创建了3个Fragment，分别是 收藏联系人列表、所有联系人列表、群组列表。</p>
+<p>进入<code>DefaultContactBrowseListFragment</code>：</p>
+<p>发现<code>DefaultContactBrowseListFragment</code>的祖父类是：</p>
+<p><code>ContactEntryListFragment&lt;T extends ContactEntryListAdapter&gt;</code></p>
+<p>首先分析此基类：</p>
+<p>发现此基类实现了<code>LoadManager</code>接口，实现了该接口3个重要的抽象方法：</p>
+<pre><code class="java">public Loader&lt;D&gt; onCreateLoader(int id, Bundle args);//创建Loader
+public void onLoadFinished(Loader&lt;D&gt; loader, D data);//数据加载完毕后的回调方法
+public void onLoaderReset(Loader&lt;D&gt; loader);//数据重新加载
+</code></pre>
+<p>该类同时提供了重要的抽象方法：</p>
+<pre><code class="java">protected abstract T createListAdapter();//创建适配器Adapter类。
+</code></pre>
+<p>这意味着,子类可以按需求创造自己的适配器Adapter类,完成各个子界面Listview的数据显示，如3.1节图1所示。</p>
+<p>然后回到<code>DefaultContactBrowseListFragment</code>类：</p>
+<p>在执行<code>onCreateView</code>之前，会执行父类的一些方法，顺序如下：</p>
+<pre><code class="java">onAttach()
+setContext(activity);
+setLoaderManager(super.getLoaderManager());
+</code></pre>
+<p><code>setLoaderManager</code>中设置当前的LoaderManager实现类。 </p>
+<p>加载联系人列表数据的过程中，这个类是<code>ProfileandContactsLoader</code>。</p>
+<p>之后执行<code>onCreate</code>方法。</p>
+<p>进入<code>DefaultContactBrowseListFragment</code>的<code>onCreate(Bundle)</code>方法：</p>
+<pre><code class="java">mAdapter = createListAdapter();
+</code></pre>
+<p>发现在这里创建了<code>ListAdapter</code>：</p>
+<pre><code class="java">DefaultContactListAdapter adapter = 
+new DefaultContactListAdapter(getContext());
+</code></pre>
+<p>可以知道创建的<code>ListAdapter</code>类型是<code>DefaultContactListAdapter</code>并返回到<code>DefaultContactBrowseListFragment</code>类。</p>
+<p>执行完<code>onCreate</code>方法之后，</p>
+<p>执行<code>DefaultContactBrowseListFragment</code>的<code>onCreateView</code>方法。</p>
+<p>进入DefaultContactBrowseListFragment的onCreateView方法：</p>
+<pre><code class="java">mListView = (ListView)mView.findViewById(android.R.id.list);
+mListView.setAdapter(mAdapter);
+</code></pre>
+<p>首先获取了ListView用以填充联系人数据，然后设置了适配器，但是此时适配器中的数据是空的，直到后面才会加载数据更新UI。<br>在<code>onCreateView</code>方法执行完之后，在UI可见之前回调执行<code>Activity</code>的<code>onStart</code>方法。</p>
+<p>进入<code>DefaultContactBrowseListFragment</code>的<code>onStart</code>方法：</p>
+<pre><code class="java">mContactsPrefs.registerChangeListener(mPreferencesChangeListener);
+startLoading();
+</code></pre>
+<p>首先注册了一个<code>ContentObserv</code>e的子类监听数据变化。<br>然后执行<code>startLoading</code>方法，<strong>目测这应当就是开始加载数据的方法了！</strong></p>
+<p>进入<code>DefaultContactBrowseListFragment</code>的<code>startLoading</code>方法：</p>
+<pre><code class="java">int partitionCount = mAdapter.getPartitionCount();
+for (int i = 0; i &lt; partitionCount; i++) {
+……
+Partition partition = mAdapter.getPartition(i);
+startLoadingDirectoryPartition(i);
+……}
+</code></pre>
+<p><code>Partition</code>这个类持有一个<code>Cursor</code>对象，用来存储数据。<br><code>Adapter</code>持有的<code>Partition</code>，<code>Partition</code>类代表了当前需要加载的<code>Directory</code>，可以理解为一个联系人集合，比如说本地联系人、Google联系人……这里我们假设只加载本地联系人数据，所以<code>partitionCount=1</code>。</p>
+<p>从这里我们可以做出猜测：<br>联系人数据不是想象中的分页（每次N条联系人数据）加载，也不是说一次性全部加载，而是一个账户一个账户加载联系人数据，加载完毕一个账户就在uI刷新并显示数据。</p>
+<p>进入<code>DefaultContactBrowseListFragment</code>的<code>startLoadingDirectoryPartition</code>方法：</p>
+<pre><code class="java">loadDirectoryPartition(partitionIndex, partition);
+</code></pre>
+<p>进入此方法：</p>
+<pre><code class="java">getLoaderManager().restartLoader(partitionIndex, args, this);
+</code></pre>
+<p>这个方法是LoaderManager实现类的方法，参照文档解释：</p>
+<blockquote>
+<p>这个方法会新建/重启一个当前LoaderManager中的Loader，将回调方法注册给他，并开始加载数据。也就是说会回调LoaderManager的onCreateLoader()方法。<br>Starts a new or restarts an existing android.content.Loader in this manager, registers the callbacks to it, and (if the activity/fragment is currently started) starts loading it</p>
+</blockquote>
+<p>进入<code>LoadManager</code>接口的实现类：<code>LoaderManagerImpl</code>的<code>restartLoader</code>方法内部：</p>
+<pre><code class="java">LoaderInfo info = mLoaders.get(id);
+Create info=
+createAndInstallLoader(id, args,  (LoaderManager.LoaderCallbacks&lt;Object&gt;)callback);
+//进入createAndInstallLoader方法：
+LoaderInfo info = createLoader(id, args, callback);
+installLoader(info);
+//进入createLoader方法：
+LoaderInfo info = new LoaderInfo(id, args,  (LoaderManager.LoaderCallbacks&lt;Object&gt;)callback);
+Loader&lt;Object&gt; loader = callback.onCreateLoader(id, args);
+//关键方法出现了！LoadManager接口的抽象方法的onCreateLoader方法被回调了！
+//然后installLoader方法启动了这个Loader！
+info.start();
+</code></pre>
+<p>进入<code>ContactEntryListFragment</code>的<code>onCreateLoader</code>方法，位于<code>DefaultContactBrowseListFragment</code>的祖父类<code>ContactEntryListFragment</code>中：</p>
+<pre><code class="java">CursorLoader loader = createCursorLoader(mContext);//创建Loader
+mAdapter.configureLoader(loader, directoryId);//配置Loader
+</code></pre>
+<p>发现在此方法中，首先调用<code>createCursorLoader</code>方法创建了<code>Loader</code>。<br>然后通过<code>configureLoader</code>方法配置<code>Loader</code>的<code>query</code>方法的查询参数，也就是配置SQL中select查询语句的参数。<br>这也同时意味着，<code>ContactEntryListFragment</code>类的子类们可以重写<code>createCursorLoader</code>方法以提供适合自身的Loader，重写<code>configureLoader</code>方法为Loader配置合适的参数，适配各种自定义的查询获取数据。</p>
+<p>观察<code>createCursorLoader</code>方法在<code>DefaultContactBrowseListFragment</code>类中实现：</p>
+<pre><code class="java">return new ProfileAndContactsLoader(context);
+</code></pre>
+<p>直接返回了<code>DefaultContactBrowseListFragment</code>的数据加载器：<code>ProfileAndContactsLoader</code><br>这就是<code>DefaultContactBrowseListFragment</code>的Loader实现类（数据加载器）。</p>
+<p>然后再看一下<code>ProfileAndContactsLoader</code>类是如何加载数据的呢？<br>发现它继承自<code>CursorLoader</code>，而<code>CursorLoader</code>又继承自<code>AsyncTaskLoader&lt;D&gt;</code><br>在关键的<code>LoadBackGround()</code>方法中：<br>异步调用了ContentResolver的<code>query</code>方法：</p>
+<pre><code class="java">Cursor cursor = getContext()
+.getContentResolver()
+.query(mUri, mProjection, mSelection,
+                    mSelectionArgs, mSortOrder, mCancellationSignal);
+cursor.registerContentObserver(mObserver);
+</code></pre>
+<p>通过这个Query方法，实现了对联系人数据的查询,返回Cursor数据。并绑定了数据监听器。</p>
+<p>那么问题来了</p>
+<pre><code class="java">query(mUri, mProjection, mSelection,mSelectionArgs, mSortOrder, mCancellationSignal)
+</code></pre>
+<p>的这些参数那里指定的呢？<br><code>configureLoader</code>方法在<code>DefaultContactListAdapter</code>类中实现，实现了对<code>query</code>参数的配置：</p>
+<pre><code class="java">configureUri(loader, directoryId, filter);
+loader.setProjection(getProjection(false));
+configureSelection(loader, directoryId, filter);
+loader.setSortOrder(sortOrder);
+</code></pre>
+<p>可以看到，配置了Loader主要的几个参数：Uri，Projection，Selection，SortOrder。<br>这些参数用于最后和ContactsProvider交互的方法Query方法中……</p>
+<p>最终查询<code>ContactsProvider2</code>的uri是：</p>
+<pre><code class="xml">Uri：content://com.android.contacts/contacts?address_book_index_extras=true&amp;directory=0
+</code></pre>
+<p>发现ContentProvider的服务类似一个网站，uri就是网址，而请求数据的方式类似使用Get方式获取数据。</p>
+<p>最后通过ContentProvider2构建的查询语句是这样的：</p>
+<pre><code class="sql">SELECT 
+_id, display_name, agg_presence.mode AS contact_presence, 
+contacts_status_updates.status AS contact_status, photo_id, photo_thumb_uri, lookup, 
+is_user_profile 
+FROM view_contacts 
+LEFT OUTER JOIN agg_presence ON (_id = agg_presence.presence_contact_id) LEFT OUTER JOIN 
+status_updates contacts_status_updates ON
+(status_update_id=contacts_status_updates.status_update_data_id)
+</code></pre>
+<p>可以发现最后通过ContactsProvider2实现的查询，并不是直接查询相关的表（Contacts表、rawcontacts表，data表……），而是直接查询<code>view_contacts</code>视图，因为这样会有更加高的效率。<br>这也就意味着如果想给联系人数据库新增一个字段供界面使用，仅修改对应的表结构是不行，还要修改对应的视图才能得到想要的效果。</p>
+<p>查询完毕后，回调<code>LoaderManager</code>的<code>onLoadFinished</code>方法，完成对UI界面的更新：</p>
+<pre><code class="java">onPartitionLoaded(loaderId, data);
+</code></pre>
+<p>接着进入<code>onPartitionLoaded</code>方法：</p>
+<pre><code class="java">mAdapter.changeCursor(partitionIndex, data);
+</code></pre>
+<p>进入这个<code>changeCursor</code>方法：</p>
+<pre><code class="java">mPartitions[partition].cursor = cursor;
+notifyDataSetChanged();
+</code></pre>
+<p>发现在这里改变了<code>Adapter</code>的数据集<code>Cursor</code>，并发出通知数据已经改变，UI进行更新。</p>
+<p>至此，默认联系人数据的显示分析到此结束。</p>
+<p>其他<code>Fragment</code>的数据填充基本仍然类似此流程，所不同的只是各自的<code>Fragment</code>、<code>Adapter</code>、<code>CursorLoader</code>以及<code>CursorLoader</code>配置的参数（uri，projection,selection,args,order……）有所不同。</p>
+<p>可以参考下表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Fragment</th>
+<th style="text-align:center">Adapter</th>
+<th style="text-align:center">CursorLoader</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">DefaultContactBrowseListFragment(默认联系人列表)</td>
+<td style="text-align:center">DefaultContactListAdapter</td>
+<td style="text-align:center">ProfileAndContactsLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">ContactTitleListFragment(收藏联系人列表)</td>
+<td style="text-align:center">ContactTileAdapter</td>
+<td style="text-align:center">ContactTileLoaderFactory StarredLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">ContactTitleFrequentFragment(常用联系人列表)</td>
+<td style="text-align:center">ContactTitleAdapter</td>
+<td style="text-align:center">ContactTileLoaderFactory FrequentLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">GroupBrowseListFragment(群组列表)</td>
+<td style="text-align:center">GroupBrowseLIstAdapter</td>
+<td style="text-align:center">GroupListLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">GroupDetailFragment(指定ID群组的联系人列表)</td>
+<td style="text-align:center">GroupMemberTileAdapter</td>
+<td style="text-align:center">GroupMemberLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">ContactDetailFragment(指定ID联系人信息)</td>
+<td style="text-align:center">ViewAdapter</td>
+<td style="text-align:center">ContactLoader</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3-1-2-联系人详细信息数据的显示"><a href="#3-1-2-联系人详细信息数据的显示" class="headerlink" title="3.1.2 联系人详细信息数据的显示"></a>3.1.2 联系人详细信息数据的显示</h4><p><strong>关键类：</strong></p>
+<pre><code class="java">ContactDetailActivity
+
+ContactDetailFragment  
+
+ContactLoaderFragment //不可见 负责加载联系人详细数据，集成LoadManager对象。
+
+ContactLoader   //联系人详细信息Loader。
+
+ContactDetailLayoutController     //布局控制类。
+</code></pre>
+<p>原理类似列表显示，如下简要说明： </p>
+<pre><code class="xml">* ContactLoaderFragment类创建了一个实现LoaderManager.LoaderCallbacks&lt;Contact&gt;接口的对象，数据类型指定为Contacts。负责创建、管理ContactLoader。
+
+* 得到当前用户选择的联系人URI，配置对应的ContactLoader。 
+
+* 后台数据查询完毕后，回调LoadManager的onLoadFinished()方法，并将数据以Contacts的数据类型返回，然后回调ContactDetailLoaderFragmentListener的onDetailsLoaded()方法。 
+
+* onDetailsLoaded()方法中，新开一个线程，通过ContactDetailLayoutController类的setContactData(Conatct)设置数据，刷新ContactDetailFragment。
+</code></pre>
+<h3 id="3-2-联系人数据的编辑和存储"><a href="#3-2-联系人数据的编辑和存储" class="headerlink" title="3.2 联系人数据的编辑和存储"></a>3.2 联系人数据的编辑和存储</h3><h4 id="3-2-1-编辑界面相关"><a href="#3-2-1-编辑界面相关" class="headerlink" title="3.2.1 编辑界面相关"></a>3.2.1 编辑界面相关</h4><p>联系人数据所属的账号不同，加载的UI也是不同的，比如Sim卡联系人一般只有name，phone num，但是本地账号联系人可能就会有email，</p>
+<p>address，website等信息…… </p>
+<p>联系人数据UI的加载是通过代码动态加载的，而不是xml文件写死的。</p>
+<p>那么问题来了， </p>
+<p>新建联系人的界面是如何设计？ </p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019034-3bc9de0a-9f10-11e8-8f38-f764c64cc8e2.jpeg" alt=""></p>
+<p>先进入新建联系人界面：</p>
+<p>主界面<code>PeopleActivity</code>中点击新建联系人Button，触发<code>onOptionsItemSelected</code>方法中的</p>
+<p>case R.id.menu_add_contact分支： </p>
+<p>执行<code>startActivity(intent);</code> </p>
+<p><code>startActivity</code>启动Intent，Intent的Action设置为android.intent.action.INSERT </p>
+<p>找到匹配此Action的Activity：<code>ContactEditorActivity</code></p>
+<p><code>ContactEditorActivity</code>的布局文件：</p>
+<p><code>ContactEditorActivity</code>的<code>onCreate()</code>方法中找到布局： </p>
+<p><code>setContentView(R.layout.contact_editor_activity);</code></p>
+<p>在xml文件中找到这个布局：</p>
+<pre><code class="xml">&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;&gt;
+ &lt;fragment class=&quot;com.android.contacts.editor.ContactEditorFragment&quot;
+            android:id=&quot;@+id/contact_editor_fragment&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;match_parent&quot; /&gt;
+&lt;/FrameLayout&gt;
+</code></pre>
+<p>只包含一个Fragment：<code>ContactEditorFragment</code>。程序解析Xml文件到这里就会执行<code>ContactEditorFragment</code>类。</p>
+<p>进入<code>ContactEditorFragment</code>的<code>onCreateView</code>方法：</p>
+<pre><code class="xml">//展开布局 
+final View view
+= inflater.inflate(R.layout.contact_editor_fragment, container, false);    
+//找到布局中的一个线性布局
+//关键的布局是contact_editor_fragment中的一个iD为editors的线性布局！
+mContent = (LinearLayout) view.findViewById(R.id.editors);
+</code></pre>
+<p>找到<code>contact_editor_fragment</code>：</p>
+<pre><code class="xml">&lt;ScrollView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:fillViewport=&quot;true&quot;
+    android:fadingEdge=&quot;none&quot;
+    android:background=&quot;@color/background_primary&quot;
+&gt;
+    &lt;LinearLayout android:id=&quot;@+id/editors&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;vertical&quot;
+    /&gt;
+&lt;/ScrollView&gt;
+</code></pre>
+<p>于是确认<code>ContactEditorFragment</code>的根布局就是一个id为<code>editors</code>的LinearLayout。<br>想到上一步的语句：</p>
+<pre><code class="xml">mContent = (LinearLayout) view.findViewById(R.id.editors);
+</code></pre>
+<p>所以关键就在于，接下来在代码中为mContent这个线性布局动态添加地了什么UI，而这些UI才是真正显示的东西。</p>
+<p><code>ContactEditorFragment</code>的<code>onCreateView</code>方法执行完毕之后，会调用<code>onActivityCreate()</code>方法：</p>
+<pre><code class="java">if (Intent.ACTION_INSERT.equals(mAction)) {
+final Account account = mIntentExtras == null ? null : (Account) 
+mIntentExtbindEditorsForNewContactras.getParcelable(Intents.Insert.ACCOUNT);
+final String dataSet = mIntentExtras == null ? null :
+                        mIntentExtras.getString(Intents.Insert.DATA_SET);
+if (account != null) {
+// Account specified in Intent
+createContact(new AccountWithDataSet(account.name, account.type, dataSet));
+}
+</code></pre>
+<p>上面代码首先取出了当前Account信息，数据信息。封装为一个<code>AccountWithDataSet</code>对象，作为<code>createContact</code>方法的参数。之前我们分析过，编辑界面和账户是高度相关的，所以对UI的动态操作必然和Account对象相关。进入<code>createContact</code>方法。</p>
+<p>看一下<code>ContactEditorFragment</code>中的<code>createContact()</code>到底对界面干了什么！！ </p>
+<p><code>createContact</code>方法中调用了<code>bindEditorsForNewContact(account, accountType)</code>: </p>
+<p>关键代码：</p>
+<pre><code class="java">……
+final RawContact rawContact = new RawContact();
+if (newAccount != null) {
+    rawContact.setAccount(newAccount);
+} else {
+    rawContact.setAccountToLocal();
+}
+final ValuesDelta valuesDelta = ValuesDelta.fromAfter(rawContact.getValues());
+final RawContactDelta insert = new RawContactDelta(valuesDelta);
+……
+mState.add(insert);
+bindEditors();
+</code></pre>
+<p>发现暂时还是没有对界面做什么事情，任然处于酝酿阶段……</p>
+<p>首先使用传入的Accout对象创建一个<code>RawContact</code>对象，然后使用<code>RawContact</code>对象构建了一个<code>RawContactDelta</code>对象insert，接着就将insert对象放入<code>RawContactDeltaList</code> 对象<code>mState</code>中。</p>
+<pre><code class="xml">RawContact类：raw contacts数据表内的一条数据，表示一个联系人某一特定帐户的信息。存储Data表中一些数据行（电话号码、Email、地址……）的集合及一些其他的信息。
+他的存储结构为： HashMap&lt;String, ArrayList&lt;ValuesDelta&gt;&gt;
+
+RawContactDelta类：包含RawContact对象（即一个联系人某一特定帐户的信息），并具有记录修改的功能。
+
+RawContactDeltaList类：内部的存储结构是ArrayList&lt;RawContactDelta&gt;，可以理解为 单个联系人所有账户的数据集合。
+</code></pre>
+<p>然后调用了<code>bindEditors()</code>法。 </p>
+<p>关键代码如下：</p>
+<pre><code class="java">……
+mContent.removeAllViews();
+……
+final BaseRawContactEditorView editor;
+……
+editor = (RawContactEditorView) inflater.inflate(R.layout.raw_contact_editor_view,mContent, false);
+//添加视图了……………………
+mContent.addView(editor);
+//为自定义视图BaseRawContactEditorView设置状态，必然是修改UI的操作！
+editor.setState(rawContactDelta, type, mViewIdGenerator, isEditingUserProfile());
+</code></pre>
+<p>可以看到，<code>mContent</code>这个LinearLayout添加的View是<code>editor</code>，而<code>editor</code>是一个自定义的视图<code>BaseRawContactEditorView</code>，布局是<code>R.layout.raw_contact_editor_view</code>。</p>
+<p>找到<code>raw_contact_editor_view</code>布局，发现该布局包含新建联系人页面所有的UI：</p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019036-3bf3c4ae-9f10-11e8-81b0-dfa54fe8fad9.jpeg" alt=""> </p>
+<pre><code class="xml">&lt;com.android.contacts.editor.RawContactEditorView
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:orientation=&quot;vertical&quot;
+    android:paddingTop=&quot;@dimen/editor_padding_top&quot;&gt;
+&lt;include
+用户账户相关UI
+        layout=&quot;@layout/editor_account_header_with_dropdown&quot; /&gt;
+    &lt;LinearLayout
+        android:id=&quot;@+id/body&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;vertical&quot;&gt;
+        &lt;LinearLayout
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:orientation=&quot;horizontal&quot;
+            android:paddingTop=&quot;8dip&quot;&gt;
+            &lt;LinearLayout
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_width=&quot;0dip&quot;
+                android:layout_weight=&quot;1&quot;
+                android:orientation=&quot;vertical&quot;&gt;
+                &lt;include
+            Name相关的UI
+                    android:id=&quot;@+id/edit_name&quot;
+                    layout=&quot;@layout/structured_name_editor_view&quot; /&gt;
+                &lt;include
+            拼音名
+                    android:id=&quot;@+id/edit_phonetic_name&quot;
+                    layout=&quot;@layout/phonetic_name_editor_view&quot; /&gt;
+            &lt;/LinearLayout&gt;
+            &lt;include
+            照片相关的UI
+                android:id=&quot;@+id/edit_photo&quot;
+                android:layout_marginRight=&quot;8dip&quot;
+                android:layout_marginEnd=&quot;8dip&quot;
+                layout=&quot;@layout/item_photo_editor&quot; /&gt;
+        &lt;/LinearLayout&gt;
+        &lt;LinearLayout
+            中间部分Item的显示在此处
+            android:id=&quot;@+id/sect_fields&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:orientation=&quot;vertical&quot;
+            android:layout_marginBottom=&quot;16dip&quot;/&gt;
+            添加其他字段 按钮
+        &lt;Button
+            android:id=&quot;@+id/button_add_field&quot;
+            android:text=&quot;@string/add_field&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_gravity=&quot;center&quot;
+            android:layout_marginBottom=&quot;32dip&quot;/&gt;
+    &lt;/LinearLayout&gt;
+&lt;/com.android.contacts.editor.RawContactEditorView&gt;
+</code></pre>
+<p>1.那么问题来了：中间的那部分布局（电话、地址……）去哪儿了？</p>
+<p>搜索有可能包含这些内容的线性布局<code>sect_fields</code>，发现在<code>RawContactEditorView</code>类中初始化为<code>mFields</code>：</p>
+<p><code>mFields = (ViewGroup)findViewById(R.id.sect_fields);</code></p>
+<p>那么只需要看代码中对mFields添加了什么UI！</p>
+<p>2.回到之前的<code>bindEditors()</code>方法，<code>RawContactEditorView</code> 对象<code>editor</code>从xml中解析完成后，执行了<code>setState</code>方法：</p>
+<pre><code class="java">editor.setState(rawContactDelta, type, mViewIdGenerator, isEditingUserProfile());
+</code></pre>
+<p>1.<code>进入RawContactEditorView</code>类，找到<code>setState</code>方法：</p>
+<pre><code class="java">public void  setState(RawContactDelta state, AccountType type, ViewIdGenerator vig,boolean isProfile)
+……
+// 遍历当前账户所有可能的item种类，如电话，姓名，地址……，并分别创建自定义视图KindSectionView
+   for (DataKind kind : type.getSortedDataKinds()) {
+……
+  final KindSectionView section = (KindSectionView)mInflater.inflate(
+                        R.layout.item_kind_section, mFields, false);
+                section.setEnabled(isEnabled());
+                section.setState(kind, state, false, vig);
+                mFields.addView(section);
+……
+}
+</code></pre>
+<p>发现遍历了当前账号类型中所有可能的数据类型（<code>DataKind</code>），</p>
+<p>创建了相关的自定义视图<code>KindSectionView</code>对象<code>section</code>，</p>
+<p>再将<code>section</code>对象添加到<code>mFields</code>中显示，</p>
+<p>这个mFields正是之前在<code>RawContactEditorView</code>类中初始化的线性布局：</p>
+<pre><code class="java">mFields = (ViewGroup)findViewById(R.id.sect_fields)。
+</code></pre>
+<p>到这里，基本可以确定，中间部分（也就是除了Name、Photo 和底部的添加字段Button之外的部分），就是通过这个<code>mFields</code>动态的根据当前账户类型添加编辑的<code>KindSectionView</code>条目来填充的。</p>
+<p>首先观察一下<code>KindSectionView</code>的布局文件<code>item_kind_section</code>：</p>
+<pre><code class="xml">&lt;com.android.contacts.editor.KindSectionView
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+    &lt;include                   这是一个TextView，title
+        android:id=&quot;@+id/kind_title_layout&quot;
+        layout=&quot;@layout/edit_kind_title&quot; /&gt;
+      &lt;LinearLayout            线性布局，用于添加EditText
+        android:id=&quot;@+id/kind_editors&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;vertical&quot; /&gt;
+    &lt;include                   添加新条目的TextView，初始化状态不可见
+        android:id=&quot;@+id/add_field_footer&quot;
+        layout=&quot;@layout/edit_add_field&quot; /&gt;
+&lt;/com.android.contacts.editor.KindSectionView&gt;
+</code></pre>
+<p>1.<code>KindSectionView</code>加载完xml文件之后，会执行<code>onFinishInflate</code>方法：</p>
+<pre><code class="java">mTitle = (TextView) findViewById(R.id.kind_title);
+mEditors = (ViewGroup) findViewById(R.id.kind_editors); 
+mAddFieldFooter = findViewById(R.id.add_field_footer);
+</code></pre>
+<p>把Xml文件中三个主要的部分都得到了，接下来重点就是观察代码中对他们做了什么。</p>
+<p>在第12步中，加载完xml文件之后，执行<code>KindSectionView</code>的<code>setState</code>方法：</p>
+<pre><code class="java">section.setState(kind, state, false, vig);
+</code></pre>
+<p>将<code>rawContactDelta</code>对象<code>state</code>传递给了<code>KindSectionView</code>类的<code>setState</code>方法：</p>
+<p>进入<code>KindSectionView</code>类的<code>setState</code>方法：</p>
+<pre><code class="java">mKind = kind;
+mState = state;
+rebuildFromState();
+</code></pre>
+<p>先进行局部变量的赋值</p>
+<p>1.然后进入到<code>rebuildFromState()</code>方法：</p>
+<pre><code class="java">  for (ValuesDelta entry : mState.getMimeEntries(mKind.mimeType)) {
+       //……遍历当前账户可能的键值对，比如电话、Email、地址……
+      createEditorView(entry);  //这个方法应当是创建EditText的方法！
+  }
+</code></pre>
+<p>在这个方法中，对<code>mState</code>集合中所有Mime类型的<code>ValuesDelta</code>集合（<code>ArrayList&lt;ValuesDelta&gt;</code>类型）进行遍历，而后将每一个 <code>ValuesDelta</code>对象 <code>entry</code>作为参数调用了<code>createEditorView(entry)</code>也就是创建各个种类的<code>EditText</code>方法，根据<code>entry</code>对象创建相应的<code>EditText</code>！</p>
+<p>简单说，就是创建<code>mState</code>中存在的类型的<code>EditText</code>。<br>当然……这还都只是猜测，需要进入<code>createEditorView</code>方法确认。</p>
+<p>1.进入<code>createEditorView</code>方法：</p>
+<pre><code class="java">view = mInflater.inflate(layoutResId, mEditors, false);
+Editor editor = (Editor) view;
+editor.setValues(mKind, entry, mState, mReadOnly, mViewIdGenerator);
+</code></pre>
+<p>第13步初始化的<code>mEditors</code>对象（也就是那个被猜测应该是放<code>EditText</code>的线性布局）在这里被使用！</p>
+<p>1.联系上下文，实际上此时editor对象是<code>TextFieldsEditorView</code>类的对象，进入<code>TextFieldsEditorView</code>的<code>setValues</code>方法，看看他是如何根据entry对象创建<code>EditText</code>的：</p>
+<pre><code class="java">public void setValues(DataKind kind, ValuesDelta entry, RawContactDelta state, boolean readOnly,ViewIdGenerator vig) {
+int fieldCount = kind.fieldList.size();  //获取所有可能的datakind的总数
+for (int index = 0; index &lt; fieldCount; index++)    //遍历所有可能的datakind，
+{ 
+final EditText fieldView = new EditText(mContext);  //创建EditText对象，之后进行配置
+fieldView.setLayoutParams……
+fieldView.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
+fieldView.setHint(field.titleRes);   //EditText的Hint
+……     
+
+fieldView.addTextChangedListener(new TextWatcher()  //注册TextChangedListener
+{
+    @Override
+    public void afterTextChanged(Editable s) {
+        // Trigger event for newly changed value
+        onFieldChanged(column, s.toString());
+    }
+    mFields.addView(fieldView);    //将EditText添加到当前的线性布局中！
+}
+</code></pre>
+<p>注释基本解释了如何通过一个<code>ValuesDelta</code>（理解为键值对集合）对象<code>entry</code>创建布局中的所有<code>EditText</code>。</p>
+<p>至此，联系人编辑界面的显示原理基本分析完成。</p>
+<p>数据存储相关</p>
+<h3 id="3-3-Sim联系人数据的整合"><a href="#3-3-Sim联系人数据的整合" class="headerlink" title="3.3 Sim联系人数据的整合"></a>3.3 Sim联系人数据的整合</h3><p>Sim卡联系人数据的显示<br>开机自动导入Sim卡联系人<br>telephony中IccProvider浅析<br>Sim卡联系人的手动导入导出</p>
+<h3 id="3-4-SD卡备份-恢复联系人"><a href="#3-4-SD卡备份-恢复联系人" class="headerlink" title="3.4 SD卡备份/恢复联系人"></a>3.4 SD卡备份/恢复联系人</h3><ul>
+<li>SD卡备份/恢复联系人</li>
+<li>联系人数据导出到SD卡</li>
+</ul>
+<h3 id="3-5-联系人搜索"><a href="#3-5-联系人搜索" class="headerlink" title="3.5 联系人搜索"></a>3.5 联系人搜索</h3><h3 id="3-6-Google联系人同步"><a href="#3-6-Google联系人同步" class="headerlink" title="3.6 Google联系人同步"></a>3.6 Google联系人同步</h3><h3 id="3-7-其他零碎功能"><a href="#3-7-其他零碎功能" class="headerlink" title="3.7 其他零碎功能"></a>3.7 其他零碎功能</h3><p>转自：<a href="https://blog.csdn.net/Kafka_88/article/details/50670406" target="_blank" rel="noopener">https://blog.csdn.net/Kafka_88/article/details/50670406</a></p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 450603622@qq.com </span>
+    </div>
+</article>
+
+
+
+<div class="article_copyright">
+    <p><span>文章标题:</span>Contacts源码结构分析</p>
+    <p><span>文章字数:</span><span class="post-count">4,538</span></p>
+    <p><span>本文作者:</span><a href="javascript:void(0)" title="steinswang">steinswang</a></p>
+    <p><span>发布时间:</span>2018-01-22, 17:53:49</p>
+    <p><span>最后更新:</span>2019-01-15, 13:32:37</p>
+    <span>原始链接:</span><a class="post-url" href="/2018/01/22/contacts-source-structure-analysis/" title="Contacts源码结构分析">http://yoursite.com/2018/01/22/contacts-source-structure-analysis/</a>
+    <p>
+        <span>版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+    </p>
+</div>
+
+
+    <div id="comments"></div>
+<link rel="stylesheet" href="/css/gitalk.css">
+
+<script type="text/javascript">
+    $.getScript('/js/gitalk.js', function () {
+        var gitalk = new Gitalk({
+            clientID: '9728a2be59846c0129fb',
+            clientSecret: 'd7d745452cf7fc41b521a305536f1999f22fb672',
+            repo: 'steinswang.github.io',
+            owner: 'steinswang',
+            admin: ['steinswang'],
+            id: location.pathname,
+            distractionFreeMode: 'true',
+            language: 'zh-CN',
+            perPage: parseInt('10',10)
+        })
+        gitalk.render('comments')
+    })
+</script>
+
+
+
+    
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2017 steinswang</p>
+<p class="footer-entry">Buit with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" href="javascript:void(0)"></a>
+    </div>
+</div>
+<div class="acParent"></div>
+
+</body>
+<script src="//cdn.bootcss.com/jquery.pjax/2.0.1/jquery.pjax.min.js"></script>
+
+<script src="//cdn.bootcss.com/photoswipe/4.1.2/photoswipe.min.js"></script>
+<script src="//cdn.bootcss.com/photoswipe/4.1.2/photoswipe-ui-default.min.js"></script>
+
+<script src="/js/script.js"></script>
+<script>
+    var img_resize = 'photoSwipe';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#ssr','#android','#binder','#压缩','#android2.3.1','#gradle','#面试','#chrome','#chrome-plugin','#cm','#lineageos','#contacts','#tools','#hexo','#blog','#keys','#3-hexo','#english','#正则表达式',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().split('\n').length - 1;
+            var $numbering = $('<ul/>').addClass('pre-numbering').attr("unselectable","on");
+            $(this).addClass('has-numbering')
+                    .parent()
+                    .append($numbering);
+            for(i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+        $.getScript("//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+
+        // PhotoSwipe
+        $('article').each(function(i){
+            $(this).find('img').each(function(){
+                if ($(this).closest('figure').hasClass('article-gallery-img')) {
+                    return;
+                }
+                var alt = this.alt;
+                $(this)
+                    .wrap('<figure class="article-gallery-img" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"></figure>')
+                    .wrap('<a href="' + this.src + '" title="' + alt + '"></a>');
+                $(this).after('<div class="img_alt"><span>' + (alt || '') + '</span></div>');
+            });
+        });
+
+        var pswpElement = document.querySelectorAll('.pswp')[0];
+        if (pswpElement) {
+            var gallerySelector = '.article-gallery, article';
+
+            var initPhotoSwipeFromDOM = function(gallerySelector) {
+
+                // parse slide data (url, title, size ...) from DOM elements
+                // (children of gallerySelector)
+                var parseThumbnailElements = function(el) {
+                    var thumbElements = $(el).find('figure.article-gallery-img').toArray(),
+                        numNodes = thumbElements.length,
+                        items = [],
+                        figureEl,
+                        linkEl,
+                        size,
+                        imgEl,
+                        item;
+
+                    for (var i = 0; i < numNodes; i++) {
+
+                        figureEl = thumbElements[i]; // <figure> element
+
+                        // include only element nodes
+                        if (figureEl.nodeType !== 1) {
+                            continue;
+                        }
+
+                        linkEl = figureEl.children[0]; // <a> element
+                        imgEl = linkEl.children[0]; // <img>
+
+                        size = linkEl.getAttribute('data-size');
+                        size = size && size.split('x');
+
+                        // create slide object
+                        item = {
+                            src: linkEl.getAttribute('href'),
+                            w: size && parseInt(size[0], 10) || imgEl.width,
+                            h: size && parseInt(size[1], 10) || imgEl.height
+                        };
+
+                        if (figureEl.children.length > 1) {
+                            // <figcaption> content
+                            item.title = figureEl.children[1].innerHTML;
+                        }
+
+                        if (linkEl.children.length > 0) {
+                            // <img> thumbnail element, retrieving thumbnail url
+                            item.msrc = linkEl.children[0].getAttribute('src');
+                        }
+
+                        item.el = figureEl; // save link to element for getThumbBoundsFn
+                        items.push(item);
+                    }
+
+                    return items;
+                };
+
+                // find nearest parent element
+                var closest = function closest(el, fn) {
+                    return el && (fn(el) ? el : closest(el.parentNode, fn));
+                };
+
+                // triggers when user clicks on thumbnail
+                var onThumbnailsClick = function(e) {
+                    e = e || window.event;
+
+                    var eTarget = e.target || e.srcElement;
+
+                    // find root element of slide
+                    var clickedListItem = closest(eTarget, function(el) {
+                        return (el.tagName && el.tagName.toUpperCase() === 'FIGURE');
+                    });
+
+                    if (!clickedListItem) {
+                        return;
+                    }
+
+                    if (e.preventDefault) {
+                        e.preventDefault();
+                    } else {
+                        e.returnValue = false;
+                    }
+
+                    // find index of clicked item by looping through all child nodes
+                    // alternatively, you may define index via data- attribute
+                    var clickedGallery = $(clickedListItem).closest(gallerySelector)[0],
+                        childNodes = $(clickedGallery).find('figure.article-gallery-img').toArray(),
+                        numChildNodes = childNodes.length,
+                        nodeIndex = 0,
+                        index;
+
+                    for (var i = 0; i < numChildNodes; i++) {
+                        if (childNodes[i].nodeType !== 1) {
+                            continue;
+                        }
+
+                        if (childNodes[i] === clickedListItem) {
+                            index = nodeIndex;
+                            break;
+                        }
+                        nodeIndex++;
+                    }
+
+
+
+                    if (index >= 0) {
+                        // open PhotoSwipe if valid index found
+                        openPhotoSwipe(index, clickedGallery);
+                    }
+                    return false;
+                };
+
+                // parse picture index and gallery index from URL (#&pid=1&gid=2)
+                var photoswipeParseHash = function() {
+                    var hash = window.location.hash.substring(1),
+                        params = {};
+
+                    if (hash.length < 5) {
+                        return params;
+                    }
+
+                    var vars = hash.split('&');
+                    for (var i = 0; i < vars.length; i++) {
+                        if (!vars[i]) {
+                            continue;
+                        }
+                        var pair = vars[i].split('=');
+                        if (pair.length < 2) {
+                            continue;
+                        }
+                        params[pair[0]] = pair[1];
+                    }
+
+                    if (params.gid) {
+                        params.gid = parseInt(params.gid, 10);
+                    }
+
+                    return params;
+                };
+
+                var openPhotoSwipe = function(index, galleryElement, disableAnimation, fromURL) {
+                    var pswpElement = document.querySelectorAll('.pswp')[0],
+                        gallery,
+                        options,
+                        items;
+
+                    items = parseThumbnailElements(galleryElement);
+
+                    // define options (if needed)
+                    options = {
+
+                        // define gallery index (for URL)
+                        galleryUID: galleryElement.getAttribute('data-pswp-uid'),
+
+                        getThumbBoundsFn: function(index) {
+                            // See Options -> getThumbBoundsFn section of documentation for more info
+                            var thumbnail = items[index].el.getElementsByTagName('img')[0], // find thumbnail
+                                pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
+                                rect = thumbnail.getBoundingClientRect();
+
+                            return {
+                                x: rect.left,
+                                y: rect.top + pageYScroll,
+                                w: rect.width
+                            };
+                        }
+                    };
+
+                    // PhotoSwipe opened from URL
+                    if (fromURL) {
+                        if (options.galleryPIDs) {
+                            // parse real index when custom PIDs are used
+                            // http://photoswipe.com/documentation/faq.html#custom-pid-in-url
+                            for (var j = 0; j < items.length; j++) {
+                                if (items[j].pid == index) {
+                                    options.index = j;
+                                    break;
+                                }
+                            }
+                        } else {
+                            // in URL indexes start from 1
+                            options.index = parseInt(index, 10) - 1;
+                        }
+                    } else {
+                        options.index = parseInt(index, 10);
+                    }
+
+                    // exit if index not found
+                    if (isNaN(options.index)) {
+                        return;
+                    }
+
+                    if (disableAnimation) {
+                        options.showAnimationDuration = 0;
+                    }
+
+                    // Pass data to PhotoSwipe and initialize it
+                    gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+
+                    gallery.listen('imageLoadComplete', function(index, item) {
+                        var linkEl = item.el.children[0];
+                        var img = item.container.children[0];
+                        if (!linkEl.getAttribute('data-size')) {
+                            linkEl.setAttribute('data-size', img.naturalWidth + 'x' + img.naturalHeight);
+                            item.w = img.naturalWidth;
+                            item.h = img.naturalHeight;
+                            gallery.invalidateCurrItems();
+                            gallery.updateSize(true);
+                        }
+                    });
+
+                    gallery.init();
+                };
+
+                // loop through all gallery elements and bind events
+                var galleryElements = document.querySelectorAll(gallerySelector);
+
+                for (var i = 0, l = galleryElements.length; i < l; i++) {
+                    galleryElements[i].setAttribute('data-pswp-uid', i + 1);
+                    galleryElements[i].onclick = onThumbnailsClick;
+                }
+
+                // Parse URL and open gallery if it contains #&pid=3&gid=1
+                var hashData = photoswipeParseHash();
+                if (hashData.pid && hashData.gid) {
+                    openPhotoSwipe(hashData.pid, galleryElements[hashData.gid - 1], true, true);
+                }
+            };
+
+            // execute above function
+            initPhotoSwipeFromDOM(gallerySelector);
+        }
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 2px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: #fafafa;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 2px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /*引用块样式*/
+    
+    .post .pjax article blockquote {
+        padding: 10px 20px;
+        background-color: white;
+        border: none;
+        border-left: 4px solid #42b983;
+        border-right: 4px solid #42b983;
+        border-radius: 10px;
+    }
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.1;
+        background: url("/img/bg.jpg");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+</style>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element, as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. PhotoSwipe keeps only 3 slides in DOM to save memory. -->
+        <!-- don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+</html>

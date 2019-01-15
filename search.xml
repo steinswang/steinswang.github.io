@@ -1,0 +1,2132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title><![CDATA[ssr-ip]]></title>
+      <url>/2019/01/08/ssr-ip/</url>
+      <content type="html"><![CDATA[<p>144.202.122.98</p>
+]]></content>
+      
+        <categories>
+            
+            <category> ssr </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> ssr </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[android2.3.1编译]]></title>
+      <url>/2018/08/13/android2.3.1-build/</url>
+      <content type="html"><![CDATA[<p>##前言</p>
+<p>&ensp;&ensp;&ensp;&ensp;一直想系统的把android的内容重新捋一遍，今天京东优惠，66入了<code>《Android系统源代码情景分析》</code>，这书是基于android2.3.1来说明的，为了和方便真机编译与调试，入了nexus s. 好了话不多说，直接上 命令以及error的fix工作.</p>
+<h2 id="android2-3-1编译"><a href="#android2-3-1编译" class="headerlink" title="android2.3.1编译"></a>android2.3.1编译</h2><p>我的环境:</p>
+<p>系统环境为<code>ubuntu 14.04</code></p>
+<p>jdk使用 <code>jdk1.6.0_45</code></p>
+<pre><code class="bash">repo init -u https://android.googlesource.com/platform/manifest -b android-2.3.1_r1
+repo sync -j4
+</code></pre>
+<p><strong>gcc downgrade:</strong></p>
+<pre><code class="bash">sudo apt-get install g++-4.4-multilib
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.4 20 --slave /usr/bin/g++ g++ /usr/bin/g++-4.4
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
+sudo update-alternatives --config gcc
+</code></pre>
+<p><code>去google aosp 官网下载对应的driver sh 脚本， 运行生成vendor</code></p>
+<pre><code class="bash">$ source build/envsetup.sh
+$ lunch
+$ full_crespo-userdebug
+$ make (这边千万别使用-j, 会引起多线程编译build error)
+</code></pre>
+<p><strong>以下是build时产生的error以及处理：</strong></p>
+<p><code>error:Can&#39;t locate Switch.pm in @INC</code></p>
+<pre><code class="bash">sudo apt-get install libswitch-perl
+</code></pre>
+<p><code>dalvik/vm/native/dalvik_system_Zygote.c:191: error: storage size of ‘rlim’ isn’t known</code></p>
+<p>Fix:</p>
+<pre><code class="bash">diff --git a/vm/native/dalvik_system_Zygote.c b/vm/native/dalvik_system_Zygote.c
+index bcc2313..112563a 100644
+--- a/vm/native/dalvik_system_Zygote.c
++++ b/vm/native/dalvik_system_Zygote.c
+@@ -21,6 +21,7 @@
+ #include &quot;native/InternalNativePriv.h&quot;
+
+ #include &lt;signal.h&gt;
++#include &lt;sys/resource.h&gt;
+ #include &lt;sys/types.h&gt;
+ #include &lt;sys/wait.h&gt;
+ #include &lt;grp.h&gt;
+</code></pre>
+<p><code>/usr/include/zlib.h:34: fatal error: zconf.h: No such file or directory</code></p>
+<p>Fix:</p>
+<pre><code class="bash">sudo ln -s /usr/include/x86_64-linux-gnu/zconf.h /usr/include
+</code></pre>
+<p><em>编译成功后:</em></p>
+<p>去twrp 下载对应的recovery 的 image.</p>
+<pre><code class="bash">fastboot flash recovery twrp.img
+adb reboot bootloader
+</code></pre>
+<p>从bootloader 进入recovery模式，进行双清后，重新进入bootloader，使用一下命令进行刷机.</p>
+<pre><code class="bash">adb reboot bootloader
+fastboot -w flashall
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android2.3.1 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Binder机制]]></title>
+      <url>/2018/02/01/binder/</url>
+      <content type="html"><![CDATA[<p><img src="https://user-images.githubusercontent.com/35097187/44444049-67240680-a60d-11e8-982c-50120f82d31a.png" alt=""></p>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+            <tag> binder </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[工具软件&插件]]></title>
+      <url>/2018/01/23/tool-softwares-and-plugins/</url>
+      <content type="html"><![CDATA[<h2 id="sublime"><a href="#sublime" class="headerlink" title="sublime"></a>sublime</h2><h3 id="package-control"><a href="#package-control" class="headerlink" title="package control"></a>package control</h3><p>Sublime Text 3</p>
+<pre><code class="javascript">import urllib.request,os,hashlib; h = &#39;6f4c264a24d933ce70df5dedcf1dcaee&#39; + &#39;ebe013ee18cced0ef93d5f746d80ef60&#39;; pf = &#39;Package Control.sublime-package&#39;; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( &#39;http://packagecontrol.io/&#39; + pf.replace(&#39; &#39;, &#39;%20&#39;)).read(); dh = hashlib.sha256(by).hexdigest(); print(&#39;Error validating download (got %s instead of %s), please try manual install&#39; % (dh, h)) if dh != h else open(os.path.join( ipp, pf), &#39;wb&#39; ).write(by)
+</code></pre>
+<p>Sublime Text 2</p>
+<pre><code class="javascript">import urllib2,os,hashlib; h = &#39;6f4c264a24d933ce70df5dedcf1dcaee&#39; + &#39;ebe013ee18cced0ef93d5f746d80ef60&#39;; pf = &#39;Package Control.sublime-package&#39;; ipp = sublime.installed_packages_path(); os.makedirs( ipp ) if not os.path.exists(ipp) else None; urllib2.install_opener( urllib2.build_opener( urllib2.ProxyHandler()) ); by = urllib2.urlopen( &#39;http://packagecontrol.io/&#39; + pf.replace(&#39; &#39;, &#39;%20&#39;)).read(); dh = hashlib.sha256(by).hexdigest(); open( os.path.join( ipp, pf), &#39;wb&#39; ).write(by) if dh == h else None; print(&#39;Error validating download (got %s instead of %s), please try manual install&#39; % (dh, h) if dh != h else &#39;Please restart Sublime Text to finish installation&#39;)
+</code></pre>
+<h3 id="Ubuntu下Sublime-Text-3输入中文issue"><a href="#Ubuntu下Sublime-Text-3输入中文issue" class="headerlink" title="Ubuntu下Sublime Text 3输入中文issue"></a>Ubuntu下Sublime Text 3输入中文issue</h3><pre><code class="bash">git clone https://github.com/lyfeyaj/sublime-text-imfix.git
+cd ~/sublime-text-imfix
+./sublime-imfix
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> 工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> tools </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[工具软件keys]]></title>
+      <url>/2018/01/23/tool-software-keys/</url>
+      <content type="html"><![CDATA[<h2 id="markdownpad-pro"><a href="#markdownpad-pro" class="headerlink" title="markdownpad pro:"></a>markdownpad pro:</h2><p>邮箱：</p>
+<pre><code class="xml">Soar360@live.com
+</code></pre>
+<p>授权秘钥：</p>
+<pre><code class="xml">GBPduHjWfJU1mZqcPM3BikjYKF6xKhlKIys3i1MU2eJHqWGImDHzWdD6xhMNLGVpbP2M5SN6bnxn2kSE8qHqNY5QaaRxmO3YSMHxlv2EYpjdwLcPwfeTG7kUdnhKE0vVy4RidP6Y2wZ0q74f47fzsZo45JE2hfQBFi2O9Jldjp1mW8HUpTtLA2a5/sQytXJUQl/QKO0jUQY4pa5CCx20sV1ClOTZtAGngSOJtIOFXK599sBr5aIEFyH0K7H4BoNMiiDMnxt1rD8Vb/ikJdhGMMQr0R4B+L3nWU97eaVPTRKfWGDE8/eAgKzpGwrQQoDh+nzX1xoVQ8NAuH+s4UcSeQ==
+</code></pre>
+<h2 id="sublime-text3"><a href="#sublime-text3" class="headerlink" title="sublime text3:"></a>sublime text3:</h2><pre><code class="xml">----- BEGIN LICENSE -----
+eldon
+Single User License
+EA7E-1122628
+C0360740 20724B8A 30420C09 6D7E046F
+3F5D5FBB 17EF95DA 2BA7BB27 CCB14947
+27A316BE 8BCF4BC0 252FB8FF FD97DF71
+B11A1DA9 F7119CA0 31984BB9 7D71700C
+2C728BF8 B952E5F5 B941FF64 6D7979DA
+B8EB32F8 8D415F8E F16FE657 A35381CC
+290E2905 96E81236 63D2B06D E5F01A69
+84174B79 7C467714 641A9013 94CA7162
+------ END LICENSE ------
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> 工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> tools </tag>
+            
+            <tag> keys </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[001-Food politics in America]]></title>
+      <url>/2018/01/22/food-politics-in-America/</url>
+      <content type="html"><![CDATA[<h1 id="美国的食品政策"><a href="#美国的食品政策" class="headerlink" title="美国的食品政策"></a>美国的食品政策</h1><h2 id="How-to-wage-war-against-“Big-Soda”"><a href="#How-to-wage-war-against-“Big-Soda”" class="headerlink" title="How to wage war against “Big Soda”"></a>How to wage war against “Big Soda”</h2><h2 id="如何发动对“软饮料”的战争"><a href="#如何发动对“软饮料”的战争" class="headerlink" title="如何发动对“软饮料”的战争"></a>如何发动对“软饮料”的战争</h2><p>Soda Politics: Taking on Big Soda (and Winning). By Marion Nestle. Oxford University Press; 508 pages; $29.95 and £19.99.</p>
+<p>软饮料策略：对付软饮料（然后取得胜利）。作者马里昂•奈斯特。牛津大学出版社。508页。29.95美元，19.99英镑。</p>
+<p>&ensp;&ensp;&ensp;&ensp;MARION NESTLE’S heavyweight polemic against Coca-Cola and PepsiCo comes at an odd moment for the industry. Americans are drinking fewer sugary sodas—in 2012 production was 23% below what it had been a decade earlier. Even sales of diet drinks are losing their fizz, as consumers question the merits of artificial sweeteners. From one angle, it would seem that health advocates such as Ms Nestle have won. Yet in America companies still produce 30 gallons of regular (not diet) fizzy drinks per person per year. In many countries, particularly developing ones, consumption is on the rise.</p>
+<p>&ensp;&ensp;&ensp;&ensp;软饮料工业正处不尴不尬之际，马里昂•奈斯特对口可口可乐以及百事可乐的抨击颇具影响力。越来越少的美国人选择饮用含糖碳酸饮料—-与十年前相比，2012年含糖碳酸饮料的生产减少了23%。人们甚至也失去了对膳食饮料的亲睐，因为消费者们对饮料中是否添加人工甜味剂提出了质疑。从某个角度来看，像奈斯特女士这样的健康倡导者似乎赢得了胜利。然而，美国软饮料公司每年生产的常规碳酸饮料（而非膳食饮料）人均多达30加仑。在许多国家，尤其是发展中国家，常规碳酸饮料的消费仍呈上涨趋势。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Ms Nestle, a professor at New York University, is both heartened by recent progress and dissatisfied with it. That is no surprise. Her first book, “Food Politics” (2002), remains a bible for those who bewail the power of food companies. In her new book she attacks the industry’s most widely consumed, least healthy product. “Soda Politics”, she says, is a book “to inspire readers to action”. As a rallying cry, it is verbose. When readers learn on page 238 that she will pick up a particular subject in chapter 25, it is with no little dismay that they realise they are only on chapter 17. But what the author wants most is to craft a meticulous guide to the producers’ alleged transgressions, and how to stop them.</p>
+<p>&ensp;&ensp;&ensp;&ensp;对于最近取得的进展，奈斯特女士，这位纽约大学的教授颇受鼓舞，但并不满足于此。这也不足为奇。她的第一本书“粮食政策”依旧被那些哀叹食品企业权势的人们奉为经典。在新书中，奈斯特女士对软饮料行业消费最广，最有害健康的产品进行了抨击。《软饮料策略》这本书旨在激励人们采取行动，奈斯特说到。然而作为战斗口号，却显得颇为繁冗。读者们在第238页了解到奈斯特将在第25章讲述一个特别的主题，却意识到自己才看到第17章，但他们并没有因此而沮丧。作者最想做的是拟定一份详细的指南，指出生产商曾经的过失，并想方设法阻止他们的这种行为。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Ms Nestle says she would have no quibbles with sweet fizzy drinks if they were sipped occasionally, as a treat. However, for millions of people in many countries, they are not. In Mexico companies sold 372 cans of fizzy drinks per person in 2012. About half of Americans do not drink them regularly, but those who do are disproportionately poor, less educated, male, Hispanic or black. Ten per cent of Americans down more than four cans a day.</p>
+<p>&ensp;&ensp;&ensp;&ensp;奈斯特说如果人们只是在吃饭招待的时候偶尔饮用加了甜味剂的碳酸饮料，她不会提出异议。但实际上许多国家，成千上万的人们都在喝这种饮料。2012年，仅墨西哥人均消费的碳酸饮料就高达372罐。大约一半的美国人不会经常性地饮用碳酸饮料，但是那些选择碳酸饮料的人多半是些穷困潦倒，未接受良好教育的西班牙或者黑人男性。百分之十的美国人平均每天要喝掉至少4罐碳酸饮料。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Drinking a lot of sweet fizzy drinks is plainly unhealthy. Unlike a Big Mac, they have no nutritional value; nor do their calories satisfy hunger. One large study found that for each can added to a person’s daily diet, the risk of diabetes jumped by 22%. There are also links between sugar and heart disease, stroke and cancer. Drinking lots of sodas imposes clear costs on individuals, Ms Nestle argues, but it has a broader cost, too. American taxpayers subsidise corn production (and thereby corn syrup) and let the poor use government food vouchers to buy fizzy drinks. More important, taxpayers foot the health bill for those who develop chronic disease.</p>
+<p>&ensp;&ensp;&ensp;&ensp;很显然，过度饮用碳酸饮料对身体健康是有害的。与巨无霸不同的是，这些碳酸饮料毫无营养价值，它们产生的热量也无法抵抗饥饿。一项大型研究表明，如果在日常饮食中加入碳酸饮料，那么人们罹患糖尿病的风险就会增加22%。心脏病，中风以及癌症与过多的糖分摄入不无关系。奈斯特说，大量饮用碳酸饮料会增加个人开支，但实际上个人花费要远大于此。美国的纳税人为玉米生产做出了贡献（也就是为玉米糖浆的生产做出了贡献），同时，他们让穷人用政府提供的食品券来购买碳酸饮料。更重要的是，纳税人为那些罹患慢性疾病的人支付医疗帐单。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Encouraging people to drink fewer fizzy drinks, however, is fiendishly difficult. Soda companies spend billions on marketing; it is a tribute to the admen that Coca-Cola is one of the world’s best-loved brands, despite selling what is essentially fattening sugar-water. (Think of Coca-Cola’s encouragements to “open happiness” and PepsiCo’s exuberant spokeswoman, Beyoncé Knowles.) Once people get used to consuming sugary drinks, they are loth to give them up. There is evidence suggesting that sugar is addictive—some laboratory animals prefer sugar to cocaine.</p>
+<p>&ensp;&ensp;&ensp;&ensp;然而，鼓励人们尽量少喝碳酸饮料却出奇的难。碳酸饮料企业在营销上花费巨资。尽管可口可乐售卖的实际上是令人增肥的糖水饮料，但可口可乐无疑是世界上最受消费者青睐的品牌之一。而这对于广告人而言，是件可喜可贺的事情。（想想可口可乐颇具鼓动性的广告语“开启幸福”，百事可乐活力四射的代言人碧昂丝•诺利斯。）人们一旦习惯了消费含糖饮料，便很难戒掉。有证据表明食糖是会上瘾的—-与可卡因相比，实验室的动物们更喜欢食糖。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Most interesting, fizzy-drink companies are skilled at swatting away attempts at regulation. Ms Nestle describes an extraordinarily broad team of allies. That includes obvious friends, such as employees, bottlers and distributors, as well as the restaurants, cinemas, shops and sports stadiums that sell their products. But the companies are also astute philanthropists. When Michael Bloomberg, then mayor of New York, tried to block the use of government vouchers to buy sodas in 2010, the congressional black caucus was among those to lobby against it. The caucus’s foundation has received money from both Coke and Pepsi. In 2011 Philadelphia was considering a soda tax. After the soda lobby offered a big donation to the city’s children’s hospital, the idea fizzled out.</p>
+<p>&ensp;&ensp;&ensp;&ensp;更有趣的是，碳酸饮料企业对规避规范化的尝试颇有一套。奈斯特将其描述为一个非比寻常的庞大联盟。很显然，这个联盟包括了这些企业的盟友们，比如雇员，瓶装工，经销商，那些出售他们商品的饭店，电影院，商店以及体育场。但这些碳酸饮料企业同时也是非常精明的慈善家。2010年，当时的纽约市市长迈克尔•布隆伯格试图阻止人们用政府代金券购买碳酸饮料，但却遭到了包括美国国会黑人同盟在内的多数人的反对。2011年，费城考虑是否要征收碳酸饮料税，但在碳酸饮料游说集团出资捐助了一家当地的儿童医院之后，这项提议未能实施。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Coca-Cola and PepsiCo do have a few notable adversaries. Mr Bloomberg, a billionaire, remains their single biggest foe. It is telling that in two rare instances when a soda tax has been passed—in Berkeley, California and in Mexico—it was with the help of cash from Mr Bloomberg. Drinks companies must also reckon with a small army of health advocates, among which Ms Nestle is a major-general.</p>
+<p>&ensp;&ensp;&ensp;&ensp;可口可乐和百事可乐确实有一些颇为出名的对手。布隆伯格，这位亿万富翁是他们最大的对手。据说在两个颇为罕见的通过征收碳酸饮料税的例子中—-一个是加利福尼亚的伯克利市，另一个是墨西哥—-都是在布隆伯格的资金帮助下通过了碳酸饮料税法案。饮料公司还得去对付那些以奈斯特为首的健康军团。</p>
+<p>&ensp;&ensp;&ensp;&ensp;With the slow decline of soda in America, she and her allies are advancing. Coca-Cola and PepsiCo are peddling healthier drinks, such as bottled water. However, as they try to face down a long-term threat while maintaining near-term profits, they are still pushing their syrupy fare.</p>
+<p>&ensp;&ensp;&ensp;&ensp;随着美国人慢慢地拒绝碳酸饮料，奈斯特和她的盟友们正向成功一步步迈进。可口可乐和百事可乐正忙于推销更健康的饮料，如瓶装水。然而，他们仍旧努力推动碳酸饮料事业的发展，试图在维持短期利润的同时，努力克服长期以来的威胁。</p>
+<p>&ensp;&ensp;&ensp;&ensp;Ms Nestle is impatient. To the casual reader, her suggestions can seem extreme. She writes enthusiastically about adorning soda cans with warning labels, such as pictures of a diabetic’s foot ulcer. She suggests that parents should teach their children about fizzy drinks by gently boiling down a Coke or a Pepsi into sludge, which sounds rather fun, and asking them to calculate the precise length of grocery shelves bearing sodas, which sounds less so. This zeal threatens to overshadow her stronger points: fizzy drinks offer no nutritional benefit and impose clear costs—on individuals’ health and on society.</p>
+<p>&ensp;&ensp;&ensp;&ensp;奈斯特女士可没那么好的耐心。对于一般的读者，她给的建议似乎很极端。在书中她强烈建议碳酸饮料瓶上面必须贴有糖尿病患者脚部溃烂诸如此类的警示标志。她建议父母们在向孩子们介绍碳酸饮料时，将可口可乐和百事可乐说成是垃圾，这看上去颇为有趣，并要求孩子们去算算杂货店摆满碳酸饮料的货架究竟有多长，这听上去似乎没那么好笑了。这份热情让斯耐特关于碳酸饮料的观点显得不那么重要了：碳酸饮料没有任何营养价值，对个人的健康没有好处，而且还增加了社会的负担。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 英语 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> english </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Contacts源码结构分析]]></title>
+      <url>/2018/01/22/contacts-source-structure-analysis/</url>
+      <content type="html"><![CDATA[<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h2><p>联系人模块主要记录用户的联系人数据，方便用户快捷的操作和使用，主要包括本机联系人和Sim卡联系人。</p>
+<p>本机联系人主要存储在手机内部存储空间，Android平台上是通过数据库进行存储，使用ContentProvider组件封装，提供复杂的字段用于表示联系人数据，并提供用户快捷的操作，比如增加，删除，修改，查询等等。</p>
+<p>Sim卡联系人主要存储在Sim卡内部存储文件，包括adn、fdn、sdn。主要提供简单的字段用于表示联系人数据。并通过IccProvider提供的接口进行数据的增加、删除、修改、查询操作。</p>
+<h2 id="2-软件架构"><a href="#2-软件架构" class="headerlink" title="2.软件架构"></a>2.软件架构</h2><p>联系人Contacts应用主要包括3个部分:<br>Contacts主要响应用户的请求和交互，数据显示。<br>ContactsProvider继承自Android四大组件之一的ContentProvider组件，封装了对底层数据库contact2.db的添删改查。<br>SQLite在底层物理性地存储了联系人数据。</p>
+<p>主要交互流程如下图：</p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019032-3b7392de-9f10-11e8-8567-d4189730b46e.png" alt=""></p>
+<p>Contacts模块的主要7块功能：</p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019045-3d496fe8-9f10-11e8-8077-89235449ccd4.png" alt=""></p>
+<h2 id="3-各功能模块分析"><a href="#3-各功能模块分析" class="headerlink" title="3. 各功能模块分析"></a>3. 各功能模块分析</h2><h3 id="3-1-联系人数据的显示"><a href="#3-1-联系人数据的显示" class="headerlink" title="3.1 联系人数据的显示"></a>3.1 联系人数据的显示</h3><h4 id="3-1-1-联系人列表显示"><a href="#3-1-1-联系人列表显示" class="headerlink" title="3.1.1 联系人列表显示"></a>3.1.1 联系人列表显示</h4><p><code>简要说明：</code></p>
+<pre><code class="xml">* PeopleActivity类负责联系人列表的显示。
+
+* PeopleActivity包含4个Fragment，每个Fragment包含一个ListView。
+
+* 各个Fragment中ListView的Adapter（BaseAdapter的子类）负责将数据填充到ListView。
+
+* 各个Fragment的Loader类（CursorLoader的子类）负责加载数据。
+
+* 实现LoadertManager接口负责管理这些CursorLoader。
+</code></pre>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019049-3dc1ee1e-9f10-11e8-89f3-14dac608ea42.png" alt=""></p>
+<p><strong>为什么使用Loader？</strong></p>
+<pre><code class="xml">1. Loaders确保所有的cursor操作是异步的，从而排除了UI线程中堵塞的可能性。
+2. 当通过LoaderManager来管理，Loaders还可以在activity实例中保持当前的cursor数据，也就是不需要重新查询（比如，当因为横竖屏切换需要重新启动activity时）。
+3. 当数据改变时，Loaders可以自动检测底层数据的更新和重新检索。
+</code></pre>
+<p><strong>数据加载流程概览：</strong></p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019046-3d7130f0-9f10-11e8-945c-7a0eff02b65c.png" alt=""></p>
+<p><strong>流程具体分析：</strong></p>
+<p>先上图：<br><img src="https://user-images.githubusercontent.com/35097187/44019033-3ba1bba0-9f10-11e8-94f9-e41053c967b4.jpeg" alt=""></p>
+<p>进入Contacts应用，程序的主入口Activity是<code>PeopleActivity</code>。</p>
+<p>进入<code>onCreate</code>方法：</p>
+<p><code>createViewsAndFragments(savedState);</code></p>
+<p>此方法创建视图和Fragments，进入此方法：</p>
+<pre><code class="java">mFavoritesFragment = new ContactTileListFragment();
+mAllFragment = new DefaultContactBrowseListFragment();
+mGroupsFragment = new GroupBrowseListFragment();
+</code></pre>
+<p>发现创建了3个Fragment，分别是 收藏联系人列表、所有联系人列表、群组列表。</p>
+<p>进入<code>DefaultContactBrowseListFragment</code>：</p>
+<p>发现<code>DefaultContactBrowseListFragment</code>的祖父类是：</p>
+<p><code>ContactEntryListFragment&lt;T extends ContactEntryListAdapter&gt;</code></p>
+<p>首先分析此基类：</p>
+<p>发现此基类实现了<code>LoadManager</code>接口，实现了该接口3个重要的抽象方法：</p>
+<pre><code class="java">public Loader&lt;D&gt; onCreateLoader(int id, Bundle args);//创建Loader
+public void onLoadFinished(Loader&lt;D&gt; loader, D data);//数据加载完毕后的回调方法
+public void onLoaderReset(Loader&lt;D&gt; loader);//数据重新加载
+</code></pre>
+<p>该类同时提供了重要的抽象方法：</p>
+<pre><code class="java">protected abstract T createListAdapter();//创建适配器Adapter类。
+</code></pre>
+<p>这意味着,子类可以按需求创造自己的适配器Adapter类,完成各个子界面Listview的数据显示，如3.1节图1所示。</p>
+<p>然后回到<code>DefaultContactBrowseListFragment</code>类：</p>
+<p>在执行<code>onCreateView</code>之前，会执行父类的一些方法，顺序如下：</p>
+<pre><code class="java">onAttach()
+setContext(activity);
+setLoaderManager(super.getLoaderManager());
+</code></pre>
+<p><code>setLoaderManager</code>中设置当前的LoaderManager实现类。 </p>
+<p>加载联系人列表数据的过程中，这个类是<code>ProfileandContactsLoader</code>。</p>
+<p>之后执行<code>onCreate</code>方法。</p>
+<p>进入<code>DefaultContactBrowseListFragment</code>的<code>onCreate(Bundle)</code>方法：</p>
+<pre><code class="java">mAdapter = createListAdapter();
+</code></pre>
+<p>发现在这里创建了<code>ListAdapter</code>：</p>
+<pre><code class="java">DefaultContactListAdapter adapter = 
+new DefaultContactListAdapter(getContext());
+</code></pre>
+<p>可以知道创建的<code>ListAdapter</code>类型是<code>DefaultContactListAdapter</code>并返回到<code>DefaultContactBrowseListFragment</code>类。</p>
+<p>执行完<code>onCreate</code>方法之后，</p>
+<p>执行<code>DefaultContactBrowseListFragment</code>的<code>onCreateView</code>方法。</p>
+<p>进入DefaultContactBrowseListFragment的onCreateView方法：</p>
+<pre><code class="java">mListView = (ListView)mView.findViewById(android.R.id.list);
+mListView.setAdapter(mAdapter);
+</code></pre>
+<p>首先获取了ListView用以填充联系人数据，然后设置了适配器，但是此时适配器中的数据是空的，直到后面才会加载数据更新UI。<br>在<code>onCreateView</code>方法执行完之后，在UI可见之前回调执行<code>Activity</code>的<code>onStart</code>方法。</p>
+<p>进入<code>DefaultContactBrowseListFragment</code>的<code>onStart</code>方法：</p>
+<pre><code class="java">mContactsPrefs.registerChangeListener(mPreferencesChangeListener);
+startLoading();
+</code></pre>
+<p>首先注册了一个<code>ContentObserv</code>e的子类监听数据变化。<br>然后执行<code>startLoading</code>方法，<strong>目测这应当就是开始加载数据的方法了！</strong></p>
+<p>进入<code>DefaultContactBrowseListFragment</code>的<code>startLoading</code>方法：</p>
+<pre><code class="java">int partitionCount = mAdapter.getPartitionCount();
+for (int i = 0; i &lt; partitionCount; i++) {
+……
+Partition partition = mAdapter.getPartition(i);
+startLoadingDirectoryPartition(i);
+……}
+</code></pre>
+<p><code>Partition</code>这个类持有一个<code>Cursor</code>对象，用来存储数据。<br><code>Adapter</code>持有的<code>Partition</code>，<code>Partition</code>类代表了当前需要加载的<code>Directory</code>，可以理解为一个联系人集合，比如说本地联系人、Google联系人……这里我们假设只加载本地联系人数据，所以<code>partitionCount=1</code>。</p>
+<p>从这里我们可以做出猜测：<br>联系人数据不是想象中的分页（每次N条联系人数据）加载，也不是说一次性全部加载，而是一个账户一个账户加载联系人数据，加载完毕一个账户就在uI刷新并显示数据。</p>
+<p>进入<code>DefaultContactBrowseListFragment</code>的<code>startLoadingDirectoryPartition</code>方法：</p>
+<pre><code class="java">loadDirectoryPartition(partitionIndex, partition);
+</code></pre>
+<p>进入此方法：</p>
+<pre><code class="java">getLoaderManager().restartLoader(partitionIndex, args, this);
+</code></pre>
+<p>这个方法是LoaderManager实现类的方法，参照文档解释：</p>
+<blockquote>
+<p>这个方法会新建/重启一个当前LoaderManager中的Loader，将回调方法注册给他，并开始加载数据。也就是说会回调LoaderManager的onCreateLoader()方法。<br>Starts a new or restarts an existing android.content.Loader in this manager, registers the callbacks to it, and (if the activity/fragment is currently started) starts loading it</p>
+</blockquote>
+<p>进入<code>LoadManager</code>接口的实现类：<code>LoaderManagerImpl</code>的<code>restartLoader</code>方法内部：</p>
+<pre><code class="java">LoaderInfo info = mLoaders.get(id);
+Create info=
+createAndInstallLoader(id, args,  (LoaderManager.LoaderCallbacks&lt;Object&gt;)callback);
+//进入createAndInstallLoader方法：
+LoaderInfo info = createLoader(id, args, callback);
+installLoader(info);
+//进入createLoader方法：
+LoaderInfo info = new LoaderInfo(id, args,  (LoaderManager.LoaderCallbacks&lt;Object&gt;)callback);
+Loader&lt;Object&gt; loader = callback.onCreateLoader(id, args);
+//关键方法出现了！LoadManager接口的抽象方法的onCreateLoader方法被回调了！
+//然后installLoader方法启动了这个Loader！
+info.start();
+</code></pre>
+<p>进入<code>ContactEntryListFragment</code>的<code>onCreateLoader</code>方法，位于<code>DefaultContactBrowseListFragment</code>的祖父类<code>ContactEntryListFragment</code>中：</p>
+<pre><code class="java">CursorLoader loader = createCursorLoader(mContext);//创建Loader
+mAdapter.configureLoader(loader, directoryId);//配置Loader
+</code></pre>
+<p>发现在此方法中，首先调用<code>createCursorLoader</code>方法创建了<code>Loader</code>。<br>然后通过<code>configureLoader</code>方法配置<code>Loader</code>的<code>query</code>方法的查询参数，也就是配置SQL中select查询语句的参数。<br>这也同时意味着，<code>ContactEntryListFragment</code>类的子类们可以重写<code>createCursorLoader</code>方法以提供适合自身的Loader，重写<code>configureLoader</code>方法为Loader配置合适的参数，适配各种自定义的查询获取数据。</p>
+<p>观察<code>createCursorLoader</code>方法在<code>DefaultContactBrowseListFragment</code>类中实现：</p>
+<pre><code class="java">return new ProfileAndContactsLoader(context);
+</code></pre>
+<p>直接返回了<code>DefaultContactBrowseListFragment</code>的数据加载器：<code>ProfileAndContactsLoader</code><br>这就是<code>DefaultContactBrowseListFragment</code>的Loader实现类（数据加载器）。</p>
+<p>然后再看一下<code>ProfileAndContactsLoader</code>类是如何加载数据的呢？<br>发现它继承自<code>CursorLoader</code>，而<code>CursorLoader</code>又继承自<code>AsyncTaskLoader&lt;D&gt;</code><br>在关键的<code>LoadBackGround()</code>方法中：<br>异步调用了ContentResolver的<code>query</code>方法：</p>
+<pre><code class="java">Cursor cursor = getContext()
+.getContentResolver()
+.query(mUri, mProjection, mSelection,
+                    mSelectionArgs, mSortOrder, mCancellationSignal);
+cursor.registerContentObserver(mObserver);
+</code></pre>
+<p>通过这个Query方法，实现了对联系人数据的查询,返回Cursor数据。并绑定了数据监听器。</p>
+<p>那么问题来了</p>
+<pre><code class="java">query(mUri, mProjection, mSelection,mSelectionArgs, mSortOrder, mCancellationSignal)
+</code></pre>
+<p>的这些参数那里指定的呢？<br><code>configureLoader</code>方法在<code>DefaultContactListAdapter</code>类中实现，实现了对<code>query</code>参数的配置：</p>
+<pre><code class="java">configureUri(loader, directoryId, filter);
+loader.setProjection(getProjection(false));
+configureSelection(loader, directoryId, filter);
+loader.setSortOrder(sortOrder);
+</code></pre>
+<p>可以看到，配置了Loader主要的几个参数：Uri，Projection，Selection，SortOrder。<br>这些参数用于最后和ContactsProvider交互的方法Query方法中……</p>
+<p>最终查询<code>ContactsProvider2</code>的uri是：</p>
+<pre><code class="xml">Uri：content://com.android.contacts/contacts?address_book_index_extras=true&amp;directory=0
+</code></pre>
+<p>发现ContentProvider的服务类似一个网站，uri就是网址，而请求数据的方式类似使用Get方式获取数据。</p>
+<p>最后通过ContentProvider2构建的查询语句是这样的：</p>
+<pre><code class="sql">SELECT 
+_id, display_name, agg_presence.mode AS contact_presence, 
+contacts_status_updates.status AS contact_status, photo_id, photo_thumb_uri, lookup, 
+is_user_profile 
+FROM view_contacts 
+LEFT OUTER JOIN agg_presence ON (_id = agg_presence.presence_contact_id) LEFT OUTER JOIN 
+status_updates contacts_status_updates ON
+(status_update_id=contacts_status_updates.status_update_data_id)
+</code></pre>
+<p>可以发现最后通过ContactsProvider2实现的查询，并不是直接查询相关的表（Contacts表、rawcontacts表，data表……），而是直接查询<code>view_contacts</code>视图，因为这样会有更加高的效率。<br>这也就意味着如果想给联系人数据库新增一个字段供界面使用，仅修改对应的表结构是不行，还要修改对应的视图才能得到想要的效果。</p>
+<p>查询完毕后，回调<code>LoaderManager</code>的<code>onLoadFinished</code>方法，完成对UI界面的更新：</p>
+<pre><code class="java">onPartitionLoaded(loaderId, data);
+</code></pre>
+<p>接着进入<code>onPartitionLoaded</code>方法：</p>
+<pre><code class="java">mAdapter.changeCursor(partitionIndex, data);
+</code></pre>
+<p>进入这个<code>changeCursor</code>方法：</p>
+<pre><code class="java">mPartitions[partition].cursor = cursor;
+notifyDataSetChanged();
+</code></pre>
+<p>发现在这里改变了<code>Adapter</code>的数据集<code>Cursor</code>，并发出通知数据已经改变，UI进行更新。</p>
+<p>至此，默认联系人数据的显示分析到此结束。</p>
+<p>其他<code>Fragment</code>的数据填充基本仍然类似此流程，所不同的只是各自的<code>Fragment</code>、<code>Adapter</code>、<code>CursorLoader</code>以及<code>CursorLoader</code>配置的参数（uri，projection,selection,args,order……）有所不同。</p>
+<p>可以参考下表：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Fragment</th>
+<th style="text-align:center">Adapter</th>
+<th style="text-align:center">CursorLoader</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">DefaultContactBrowseListFragment(默认联系人列表)</td>
+<td style="text-align:center">DefaultContactListAdapter</td>
+<td style="text-align:center">ProfileAndContactsLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">ContactTitleListFragment(收藏联系人列表)</td>
+<td style="text-align:center">ContactTileAdapter</td>
+<td style="text-align:center">ContactTileLoaderFactory StarredLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">ContactTitleFrequentFragment(常用联系人列表)</td>
+<td style="text-align:center">ContactTitleAdapter</td>
+<td style="text-align:center">ContactTileLoaderFactory FrequentLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">GroupBrowseListFragment(群组列表)</td>
+<td style="text-align:center">GroupBrowseLIstAdapter</td>
+<td style="text-align:center">GroupListLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">GroupDetailFragment(指定ID群组的联系人列表)</td>
+<td style="text-align:center">GroupMemberTileAdapter</td>
+<td style="text-align:center">GroupMemberLoader</td>
+</tr>
+<tr>
+<td style="text-align:center">ContactDetailFragment(指定ID联系人信息)</td>
+<td style="text-align:center">ViewAdapter</td>
+<td style="text-align:center">ContactLoader</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3-1-2-联系人详细信息数据的显示"><a href="#3-1-2-联系人详细信息数据的显示" class="headerlink" title="3.1.2 联系人详细信息数据的显示"></a>3.1.2 联系人详细信息数据的显示</h4><p><strong>关键类：</strong></p>
+<pre><code class="java">ContactDetailActivity
+
+ContactDetailFragment  
+
+ContactLoaderFragment //不可见 负责加载联系人详细数据，集成LoadManager对象。
+
+ContactLoader   //联系人详细信息Loader。
+
+ContactDetailLayoutController     //布局控制类。
+</code></pre>
+<p>原理类似列表显示，如下简要说明： </p>
+<pre><code class="xml">* ContactLoaderFragment类创建了一个实现LoaderManager.LoaderCallbacks&lt;Contact&gt;接口的对象，数据类型指定为Contacts。负责创建、管理ContactLoader。
+
+* 得到当前用户选择的联系人URI，配置对应的ContactLoader。 
+
+* 后台数据查询完毕后，回调LoadManager的onLoadFinished()方法，并将数据以Contacts的数据类型返回，然后回调ContactDetailLoaderFragmentListener的onDetailsLoaded()方法。 
+
+* onDetailsLoaded()方法中，新开一个线程，通过ContactDetailLayoutController类的setContactData(Conatct)设置数据，刷新ContactDetailFragment。
+</code></pre>
+<h3 id="3-2-联系人数据的编辑和存储"><a href="#3-2-联系人数据的编辑和存储" class="headerlink" title="3.2 联系人数据的编辑和存储"></a>3.2 联系人数据的编辑和存储</h3><h4 id="3-2-1-编辑界面相关"><a href="#3-2-1-编辑界面相关" class="headerlink" title="3.2.1 编辑界面相关"></a>3.2.1 编辑界面相关</h4><p>联系人数据所属的账号不同，加载的UI也是不同的，比如Sim卡联系人一般只有name，phone num，但是本地账号联系人可能就会有email，</p>
+<p>address，website等信息…… </p>
+<p>联系人数据UI的加载是通过代码动态加载的，而不是xml文件写死的。</p>
+<p>那么问题来了， </p>
+<p>新建联系人的界面是如何设计？ </p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019034-3bc9de0a-9f10-11e8-8f38-f764c64cc8e2.jpeg" alt=""></p>
+<p>先进入新建联系人界面：</p>
+<p>主界面<code>PeopleActivity</code>中点击新建联系人Button，触发<code>onOptionsItemSelected</code>方法中的</p>
+<p>case R.id.menu_add_contact分支： </p>
+<p>执行<code>startActivity(intent);</code> </p>
+<p><code>startActivity</code>启动Intent，Intent的Action设置为android.intent.action.INSERT </p>
+<p>找到匹配此Action的Activity：<code>ContactEditorActivity</code></p>
+<p><code>ContactEditorActivity</code>的布局文件：</p>
+<p><code>ContactEditorActivity</code>的<code>onCreate()</code>方法中找到布局： </p>
+<p><code>setContentView(R.layout.contact_editor_activity);</code></p>
+<p>在xml文件中找到这个布局：</p>
+<pre><code class="xml">&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;&gt;
+ &lt;fragment class=&quot;com.android.contacts.editor.ContactEditorFragment&quot;
+            android:id=&quot;@+id/contact_editor_fragment&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;match_parent&quot; /&gt;
+&lt;/FrameLayout&gt;
+</code></pre>
+<p>只包含一个Fragment：<code>ContactEditorFragment</code>。程序解析Xml文件到这里就会执行<code>ContactEditorFragment</code>类。</p>
+<p>进入<code>ContactEditorFragment</code>的<code>onCreateView</code>方法：</p>
+<pre><code class="xml">//展开布局 
+final View view
+= inflater.inflate(R.layout.contact_editor_fragment, container, false);    
+//找到布局中的一个线性布局
+//关键的布局是contact_editor_fragment中的一个iD为editors的线性布局！
+mContent = (LinearLayout) view.findViewById(R.id.editors);
+</code></pre>
+<p>找到<code>contact_editor_fragment</code>：</p>
+<pre><code class="xml">&lt;ScrollView xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:fillViewport=&quot;true&quot;
+    android:fadingEdge=&quot;none&quot;
+    android:background=&quot;@color/background_primary&quot;
+&gt;
+    &lt;LinearLayout android:id=&quot;@+id/editors&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;vertical&quot;
+    /&gt;
+&lt;/ScrollView&gt;
+</code></pre>
+<p>于是确认<code>ContactEditorFragment</code>的根布局就是一个id为<code>editors</code>的LinearLayout。<br>想到上一步的语句：</p>
+<pre><code class="xml">mContent = (LinearLayout) view.findViewById(R.id.editors);
+</code></pre>
+<p>所以关键就在于，接下来在代码中为mContent这个线性布局动态添加地了什么UI，而这些UI才是真正显示的东西。</p>
+<p><code>ContactEditorFragment</code>的<code>onCreateView</code>方法执行完毕之后，会调用<code>onActivityCreate()</code>方法：</p>
+<pre><code class="java">if (Intent.ACTION_INSERT.equals(mAction)) {
+final Account account = mIntentExtras == null ? null : (Account) 
+mIntentExtbindEditorsForNewContactras.getParcelable(Intents.Insert.ACCOUNT);
+final String dataSet = mIntentExtras == null ? null :
+                        mIntentExtras.getString(Intents.Insert.DATA_SET);
+if (account != null) {
+// Account specified in Intent
+createContact(new AccountWithDataSet(account.name, account.type, dataSet));
+}
+</code></pre>
+<p>上面代码首先取出了当前Account信息，数据信息。封装为一个<code>AccountWithDataSet</code>对象，作为<code>createContact</code>方法的参数。之前我们分析过，编辑界面和账户是高度相关的，所以对UI的动态操作必然和Account对象相关。进入<code>createContact</code>方法。</p>
+<p>看一下<code>ContactEditorFragment</code>中的<code>createContact()</code>到底对界面干了什么！！ </p>
+<p><code>createContact</code>方法中调用了<code>bindEditorsForNewContact(account, accountType)</code>: </p>
+<p>关键代码：</p>
+<pre><code class="java">……
+final RawContact rawContact = new RawContact();
+if (newAccount != null) {
+    rawContact.setAccount(newAccount);
+} else {
+    rawContact.setAccountToLocal();
+}
+final ValuesDelta valuesDelta = ValuesDelta.fromAfter(rawContact.getValues());
+final RawContactDelta insert = new RawContactDelta(valuesDelta);
+……
+mState.add(insert);
+bindEditors();
+</code></pre>
+<p>发现暂时还是没有对界面做什么事情，任然处于酝酿阶段……</p>
+<p>首先使用传入的Accout对象创建一个<code>RawContact</code>对象，然后使用<code>RawContact</code>对象构建了一个<code>RawContactDelta</code>对象insert，接着就将insert对象放入<code>RawContactDeltaList</code> 对象<code>mState</code>中。</p>
+<pre><code class="xml">RawContact类：raw contacts数据表内的一条数据，表示一个联系人某一特定帐户的信息。存储Data表中一些数据行（电话号码、Email、地址……）的集合及一些其他的信息。
+他的存储结构为： HashMap&lt;String, ArrayList&lt;ValuesDelta&gt;&gt;
+
+RawContactDelta类：包含RawContact对象（即一个联系人某一特定帐户的信息），并具有记录修改的功能。
+
+RawContactDeltaList类：内部的存储结构是ArrayList&lt;RawContactDelta&gt;，可以理解为 单个联系人所有账户的数据集合。
+</code></pre>
+<p>然后调用了<code>bindEditors()</code>法。 </p>
+<p>关键代码如下：</p>
+<pre><code class="java">……
+mContent.removeAllViews();
+……
+final BaseRawContactEditorView editor;
+……
+editor = (RawContactEditorView) inflater.inflate(R.layout.raw_contact_editor_view,mContent, false);
+//添加视图了……………………
+mContent.addView(editor);
+//为自定义视图BaseRawContactEditorView设置状态，必然是修改UI的操作！
+editor.setState(rawContactDelta, type, mViewIdGenerator, isEditingUserProfile());
+</code></pre>
+<p>可以看到，<code>mContent</code>这个LinearLayout添加的View是<code>editor</code>，而<code>editor</code>是一个自定义的视图<code>BaseRawContactEditorView</code>，布局是<code>R.layout.raw_contact_editor_view</code>。</p>
+<p>找到<code>raw_contact_editor_view</code>布局，发现该布局包含新建联系人页面所有的UI：</p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44019036-3bf3c4ae-9f10-11e8-81b0-dfa54fe8fad9.jpeg" alt=""> </p>
+<pre><code class="xml">&lt;com.android.contacts.editor.RawContactEditorView
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:orientation=&quot;vertical&quot;
+    android:paddingTop=&quot;@dimen/editor_padding_top&quot;&gt;
+&lt;include
+用户账户相关UI
+        layout=&quot;@layout/editor_account_header_with_dropdown&quot; /&gt;
+    &lt;LinearLayout
+        android:id=&quot;@+id/body&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;vertical&quot;&gt;
+        &lt;LinearLayout
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:orientation=&quot;horizontal&quot;
+            android:paddingTop=&quot;8dip&quot;&gt;
+            &lt;LinearLayout
+                android:layout_height=&quot;wrap_content&quot;
+                android:layout_width=&quot;0dip&quot;
+                android:layout_weight=&quot;1&quot;
+                android:orientation=&quot;vertical&quot;&gt;
+                &lt;include
+            Name相关的UI
+                    android:id=&quot;@+id/edit_name&quot;
+                    layout=&quot;@layout/structured_name_editor_view&quot; /&gt;
+                &lt;include
+            拼音名
+                    android:id=&quot;@+id/edit_phonetic_name&quot;
+                    layout=&quot;@layout/phonetic_name_editor_view&quot; /&gt;
+            &lt;/LinearLayout&gt;
+            &lt;include
+            照片相关的UI
+                android:id=&quot;@+id/edit_photo&quot;
+                android:layout_marginRight=&quot;8dip&quot;
+                android:layout_marginEnd=&quot;8dip&quot;
+                layout=&quot;@layout/item_photo_editor&quot; /&gt;
+        &lt;/LinearLayout&gt;
+        &lt;LinearLayout
+            中间部分Item的显示在此处
+            android:id=&quot;@+id/sect_fields&quot;
+            android:layout_width=&quot;match_parent&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:orientation=&quot;vertical&quot;
+            android:layout_marginBottom=&quot;16dip&quot;/&gt;
+            添加其他字段 按钮
+        &lt;Button
+            android:id=&quot;@+id/button_add_field&quot;
+            android:text=&quot;@string/add_field&quot;
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:layout_gravity=&quot;center&quot;
+            android:layout_marginBottom=&quot;32dip&quot;/&gt;
+    &lt;/LinearLayout&gt;
+&lt;/com.android.contacts.editor.RawContactEditorView&gt;
+</code></pre>
+<p>1.那么问题来了：中间的那部分布局（电话、地址……）去哪儿了？</p>
+<p>搜索有可能包含这些内容的线性布局<code>sect_fields</code>，发现在<code>RawContactEditorView</code>类中初始化为<code>mFields</code>：</p>
+<p><code>mFields = (ViewGroup)findViewById(R.id.sect_fields);</code></p>
+<p>那么只需要看代码中对mFields添加了什么UI！</p>
+<p>2.回到之前的<code>bindEditors()</code>方法，<code>RawContactEditorView</code> 对象<code>editor</code>从xml中解析完成后，执行了<code>setState</code>方法：</p>
+<pre><code class="java">editor.setState(rawContactDelta, type, mViewIdGenerator, isEditingUserProfile());
+</code></pre>
+<p>1.<code>进入RawContactEditorView</code>类，找到<code>setState</code>方法：</p>
+<pre><code class="java">public void  setState(RawContactDelta state, AccountType type, ViewIdGenerator vig,boolean isProfile)
+……
+// 遍历当前账户所有可能的item种类，如电话，姓名，地址……，并分别创建自定义视图KindSectionView
+   for (DataKind kind : type.getSortedDataKinds()) {
+……
+  final KindSectionView section = (KindSectionView)mInflater.inflate(
+                        R.layout.item_kind_section, mFields, false);
+                section.setEnabled(isEnabled());
+                section.setState(kind, state, false, vig);
+                mFields.addView(section);
+……
+}
+</code></pre>
+<p>发现遍历了当前账号类型中所有可能的数据类型（<code>DataKind</code>），</p>
+<p>创建了相关的自定义视图<code>KindSectionView</code>对象<code>section</code>，</p>
+<p>再将<code>section</code>对象添加到<code>mFields</code>中显示，</p>
+<p>这个mFields正是之前在<code>RawContactEditorView</code>类中初始化的线性布局：</p>
+<pre><code class="java">mFields = (ViewGroup)findViewById(R.id.sect_fields)。
+</code></pre>
+<p>到这里，基本可以确定，中间部分（也就是除了Name、Photo 和底部的添加字段Button之外的部分），就是通过这个<code>mFields</code>动态的根据当前账户类型添加编辑的<code>KindSectionView</code>条目来填充的。</p>
+<p>首先观察一下<code>KindSectionView</code>的布局文件<code>item_kind_section</code>：</p>
+<pre><code class="xml">&lt;com.android.contacts.editor.KindSectionView
+    xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:orientation=&quot;vertical&quot;&gt;
+    &lt;include                   这是一个TextView，title
+        android:id=&quot;@+id/kind_title_layout&quot;
+        layout=&quot;@layout/edit_kind_title&quot; /&gt;
+      &lt;LinearLayout            线性布局，用于添加EditText
+        android:id=&quot;@+id/kind_editors&quot;
+        android:layout_width=&quot;match_parent&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;vertical&quot; /&gt;
+    &lt;include                   添加新条目的TextView，初始化状态不可见
+        android:id=&quot;@+id/add_field_footer&quot;
+        layout=&quot;@layout/edit_add_field&quot; /&gt;
+&lt;/com.android.contacts.editor.KindSectionView&gt;
+</code></pre>
+<p>1.<code>KindSectionView</code>加载完xml文件之后，会执行<code>onFinishInflate</code>方法：</p>
+<pre><code class="java">mTitle = (TextView) findViewById(R.id.kind_title);
+mEditors = (ViewGroup) findViewById(R.id.kind_editors); 
+mAddFieldFooter = findViewById(R.id.add_field_footer);
+</code></pre>
+<p>把Xml文件中三个主要的部分都得到了，接下来重点就是观察代码中对他们做了什么。</p>
+<p>在第12步中，加载完xml文件之后，执行<code>KindSectionView</code>的<code>setState</code>方法：</p>
+<pre><code class="java">section.setState(kind, state, false, vig);
+</code></pre>
+<p>将<code>rawContactDelta</code>对象<code>state</code>传递给了<code>KindSectionView</code>类的<code>setState</code>方法：</p>
+<p>进入<code>KindSectionView</code>类的<code>setState</code>方法：</p>
+<pre><code class="java">mKind = kind;
+mState = state;
+rebuildFromState();
+</code></pre>
+<p>先进行局部变量的赋值</p>
+<p>1.然后进入到<code>rebuildFromState()</code>方法：</p>
+<pre><code class="java">  for (ValuesDelta entry : mState.getMimeEntries(mKind.mimeType)) {
+       //……遍历当前账户可能的键值对，比如电话、Email、地址……
+      createEditorView(entry);  //这个方法应当是创建EditText的方法！
+  }
+</code></pre>
+<p>在这个方法中，对<code>mState</code>集合中所有Mime类型的<code>ValuesDelta</code>集合（<code>ArrayList&lt;ValuesDelta&gt;</code>类型）进行遍历，而后将每一个 <code>ValuesDelta</code>对象 <code>entry</code>作为参数调用了<code>createEditorView(entry)</code>也就是创建各个种类的<code>EditText</code>方法，根据<code>entry</code>对象创建相应的<code>EditText</code>！</p>
+<p>简单说，就是创建<code>mState</code>中存在的类型的<code>EditText</code>。<br>当然……这还都只是猜测，需要进入<code>createEditorView</code>方法确认。</p>
+<p>1.进入<code>createEditorView</code>方法：</p>
+<pre><code class="java">view = mInflater.inflate(layoutResId, mEditors, false);
+Editor editor = (Editor) view;
+editor.setValues(mKind, entry, mState, mReadOnly, mViewIdGenerator);
+</code></pre>
+<p>第13步初始化的<code>mEditors</code>对象（也就是那个被猜测应该是放<code>EditText</code>的线性布局）在这里被使用！</p>
+<p>1.联系上下文，实际上此时editor对象是<code>TextFieldsEditorView</code>类的对象，进入<code>TextFieldsEditorView</code>的<code>setValues</code>方法，看看他是如何根据entry对象创建<code>EditText</code>的：</p>
+<pre><code class="java">public void setValues(DataKind kind, ValuesDelta entry, RawContactDelta state, boolean readOnly,ViewIdGenerator vig) {
+int fieldCount = kind.fieldList.size();  //获取所有可能的datakind的总数
+for (int index = 0; index &lt; fieldCount; index++)    //遍历所有可能的datakind，
+{ 
+final EditText fieldView = new EditText(mContext);  //创建EditText对象，之后进行配置
+fieldView.setLayoutParams……
+fieldView.setTextAppearance(getContext(), android.R.style.TextAppearance_Medium);
+fieldView.setHint(field.titleRes);   //EditText的Hint
+……     
+
+fieldView.addTextChangedListener(new TextWatcher()  //注册TextChangedListener
+{
+    @Override
+    public void afterTextChanged(Editable s) {
+        // Trigger event for newly changed value
+        onFieldChanged(column, s.toString());
+    }
+    mFields.addView(fieldView);    //将EditText添加到当前的线性布局中！
+}
+</code></pre>
+<p>注释基本解释了如何通过一个<code>ValuesDelta</code>（理解为键值对集合）对象<code>entry</code>创建布局中的所有<code>EditText</code>。</p>
+<p>至此，联系人编辑界面的显示原理基本分析完成。</p>
+<p>数据存储相关</p>
+<h3 id="3-3-Sim联系人数据的整合"><a href="#3-3-Sim联系人数据的整合" class="headerlink" title="3.3 Sim联系人数据的整合"></a>3.3 Sim联系人数据的整合</h3><p>Sim卡联系人数据的显示<br>开机自动导入Sim卡联系人<br>telephony中IccProvider浅析<br>Sim卡联系人的手动导入导出</p>
+<h3 id="3-4-SD卡备份-恢复联系人"><a href="#3-4-SD卡备份-恢复联系人" class="headerlink" title="3.4 SD卡备份/恢复联系人"></a>3.4 SD卡备份/恢复联系人</h3><ul>
+<li>SD卡备份/恢复联系人</li>
+<li>联系人数据导出到SD卡</li>
+</ul>
+<h3 id="3-5-联系人搜索"><a href="#3-5-联系人搜索" class="headerlink" title="3.5 联系人搜索"></a>3.5 联系人搜索</h3><h3 id="3-6-Google联系人同步"><a href="#3-6-Google联系人同步" class="headerlink" title="3.6 Google联系人同步"></a>3.6 Google联系人同步</h3><h3 id="3-7-其他零碎功能"><a href="#3-7-其他零碎功能" class="headerlink" title="3.7 其他零碎功能"></a>3.7 其他零碎功能</h3><p>转自：<a href="https://blog.csdn.net/Kafka_88/article/details/50670406" target="_blank" rel="noopener">https://blog.csdn.net/Kafka_88/article/details/50670406</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+            <tag> contacts </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[多语言下，String子串可点击并实现跳转]]></title>
+      <url>/2018/01/22/substring-jump/</url>
+      <content type="html"><![CDATA[<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过Spannable实现色彩效果，ClickableSpan实现点击。</p>
+<p>对于resource string，通过添加标签位，来计算不同语言下，可点击的substring的index</p>
+<h2 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h2><pre><code class="java">//LinkifyUtils.java
+public class LinkifyUtils {
+    private static final String PLACE_HOLDER_LINK_BEGIN = &quot;LINK_BEGIN&quot;;
+    private static final String PLACE_HOLDER_LINK_END = &quot;LINK_END&quot;;
+
+    private LinkifyUtils() {
+    }
+
+    /** Interface that handles the click event of the link */
+    public interface OnClickListener {
+        void onClick();
+    }
+
+    /**
+     * Applies the text into the {@link TextView} and part of it a clickable link.
+     * The text surrounded with &quot;LINK_BEGIN&quot; and &quot;LINK_END&quot; will become a clickable link. Only
+     * supports at most one link.
+     * @return true if the link has been successfully applied, or false if the original text
+     *         contains no link place holders.
+     */
+    public static boolean linkify(TextView textView, StringBuilder text,
+                                  final OnClickListener listener) {
+        // Remove place-holders from the string and record their positions
+        final int beginIndex = text.indexOf(PLACE_HOLDER_LINK_BEGIN);
+        if (beginIndex == -1) {
+            textView.setText(text);
+            return false;
+        }
+        text.delete(beginIndex, beginIndex + PLACE_HOLDER_LINK_BEGIN.length());
+        final int endIndex = text.indexOf(PLACE_HOLDER_LINK_END);
+        if (endIndex == -1) {
+            textView.setText(text);
+            return false;
+        }
+        text.delete(endIndex, endIndex + PLACE_HOLDER_LINK_END.length());
+
+        textView.setText(text.toString(), TextView.BufferType.SPANNABLE);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        Spannable spannableContent = (Spannable) textView.getText();
+        ClickableSpan spannableLink = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                listener.onClick();
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+        spannableContent.setSpan(spannableLink, beginIndex, endIndex,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return true;
+    }
+}
+</code></pre>
+<h2 id="UI界面"><a href="#UI界面" class="headerlink" title="UI界面"></a>UI界面</h2><pre><code class="java">//XXXActivity.java
+        StringBuilder contentBuilder = new StringBuilder();
+        contentBuilder.append(getText(R.string.no_internet));
+        LinkifyUtils.linkify(tvEmpty, contentBuilder, new LinkifyUtils.OnClickListener() {
+            @Override
+            public void onClick() {
+                Intent intent = new Intent();
+                intent.setClassName(&quot;com.android.settings&quot;, &quot;com.android.settings.wifi.WifiSettings&quot;);
+                startActivity(intent);
+            }
+        });
+</code></pre>
+<pre><code class="xml">&lt;string name=&quot;no_internet&quot;&gt;No internet connection. Make sure  &lt;xliff:g id=&quot;link_begin&quot;&gt;LINK_BEGIN&lt;/xliff:g&gt;Wi-Fi&lt;xliff:g id=&quot;link_end&quot;&gt;LINK_END&lt;/xliff:g&gt; is turned on, then try again.&lt;/string&gt;
+
+&lt;string name=&quot;no_internet&quot;&gt;未连接到互联网。请确保  &lt;xliff:g id=&quot;link_begin&quot;&gt;LINK_BEGIN&lt;/xliff:g&gt;Wi-Fi&lt;xliff:g id=&quot;link_end&quot;&gt;LINK_END&lt;/xliff:g&gt; 网路已开启，然后重试。&lt;/string&gt;
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[合并重复联系人]]></title>
+      <url>/2018/01/16/merge-contacts/</url>
+      <content type="html"><![CDATA[<p>详细code逻辑，请参考lineageos 开源项目.</p>
+<h2 id="1-搜索重复联系人"><a href="#1-搜索重复联系人" class="headerlink" title="1.搜索重复联系人"></a>1.搜索重复联系人</h2><pre><code class="java">//SearchDupActivity.java
+@Override
+protected Dialog onCreateDialog(int id) {
+    switch (id) {
+        case R.id.search_dup_dialog: {
+            mProgressDialog = initSearchingDialog();
+            DuplicatesUtils.setDialog(mProgressDialog);
+            Thread thread = new SearchDuplicatedThread();
+            DuplicatesUtils.mSearchState = true;
+            thread.start();
+            return mProgressDialog;
+        }
+    }
+    return super.onCreateDialog(id);
+}
+</code></pre>
+<h3 id="初始化search-界面"><a href="#初始化search-界面" class="headerlink" title="初始化search 界面"></a>初始化search 界面</h3><pre><code class="java">//SearchDupActivity.java
+private ProgressDialog initSearchingDialog() {
+    ProgressDialog dialog = new MyProgressDialog(this);
+    dialog.setMessage(this.getString(R.string.searching_duplicated_contacts));
+    dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    dialog.setCanceledOnTouchOutside(false);
+    Cursor cursor = null;
+    int allCount = 0;
+    String selection = RawContacts.DELETED + &quot;= 0&quot;;
+    try {
+        //计算progress total size（通过rawcontacts表查询，去除DELETED）
+        cursor = getContentResolver()
+                .query(RawContacts.CONTENT_URI, RAWCONTACTS_ID_PROJECTION,
+                selection, null, null);
+    } finally {
+        if (cursor != null) {
+            allCount = cursor.getCount();
+            cursor.close();
+        }
+    }
+    dialog.setMax(allCount);
+    return dialog;
+}
+</code></pre>
+<hr>
+<p>1.获取 account list<br>2.计算 duplicate contacts 用于显示MergeContactActivity的数据<br>3.查询完后，handler通知启动MergeContactActivity界面。</p>
+<hr>
+<pre><code class="java">//SearchDupActivity.java
+private class SearchDuplicatedThread extends Thread {
+    @Override
+    public void run() {
+        List&lt;AccountWithDataSet&gt; list = AccountTypeManager
+                .getInstance(SearchDupActivity.this).getAccounts(true);
+        ArrayList&lt;Account&gt; accountsList = new ArrayList&lt;&gt;();
+        for (int i = 0; i &lt; list.size(); i++) {
+            accountsList.add(list.get(i).getAccountOrNull());
+        }
+
+        /* calculate the contacts which can be merged. */
+        boolean isComplete = DuplicatesUtils
+                .calculateMergeRawContacts(SearchDupActivity.this, accountsList,
+                        getContentResolver());
+        Message msg = Message.obtain();
+        if (isComplete) {
+            ArrayList&lt;DuplicatesUtils.MergeContacts&gt; mergeRawContacts =
+                    DuplicatesUtils.getMergeRawContacts();
+            if (mergeRawContacts != null &amp;&amp; mergeRawContacts.size() &gt; 0) {
+                msg.what = FIND_DUPLICATED;
+            } else {
+                msg.what = NO_DUPLICATED;
+            }
+            handler.sendMessage(msg);
+        }
+    }
+}
+</code></pre>
+<hr>
+<p>1.根据account 先进行区分<br>2.根据account 查询 rawcontacts, 获取HashMap &lt;name(ignore大小写), list(rawcontacts ids)&gt;<br>3.判定是否有dup contacts(list size 是否大于2)<br> 判定是否可merge：<br>a。根据id in RawContactsEntity进行查询<br>b。根据mimeType 组建mergePhoneList、mergeEmailList、photoid等<br>c。构建ArrayList&lt;ContactsInfo&gt;<br>d。构建ArrayList&lt;MergeContacts&gt; 对于sim contacts 进行额外判定。（MergeContacts:ContactsInfo ～ 1：n）<br>4.progress 进度的更新</p>
+<hr>
+<pre><code class="java">//DuplicatesUtils.java
+public static boolean calculateMergeRawContacts(Context context, List&lt;Account&gt; accounts,
+    ContentResolver resolver) {
+    SimContactsOperation simContactsOperation = new SimContactsOperation(context);
+    mMergeRawContacts = new ArrayList&lt;&gt;();
+    int count = 0;
+    // contacts in different accounts are separated.
+    for (int i = 0; i &lt; accounts.size() &amp;&amp; mSearchState; i++) {
+        Account account = accounts.get(i);
+        HashMap&lt;String, List&lt;Long&gt;&gt; map = DuplicatesUtils.getRawNameWithIds(resolver,
+                new String[]{account.name, account.type});
+        if (map != null &amp;&amp; map.size() &gt; 0) {
+            ArrayList&lt;ContactsInfo&gt; lst1;
+            Iterator&lt;String&gt; iterator = map.keySet().iterator();
+            while (mSearchState &amp;&amp; iterator.hasNext()) {
+                List&lt;String&gt; mergePhoneList = new ArrayList();
+                List&lt;String&gt; mergeEmailList = new ArrayList();
+                long contactId = -1;
+                lst1 = new ArrayList&lt;&gt;();
+                String keyName = iterator.next();
+                List&lt;Long&gt; lst = map.get(keyName);
+                if (lst.size() &gt;= 2) {
+                    EntityIterator entityIterator = DuplicatesUtils.getEntityByIds(resolver,
+                            lst);
+                    if (entityIterator == null) {
+                        continue;
+                    }
+                    try {
+                        while (entityIterator.hasNext()) {
+                            ArrayList&lt;String&gt; phoneList = new ArrayList&lt;&gt;();
+                            ArrayList&lt;String&gt; emailList = new ArrayList&lt;&gt;();
+                            long photoId = 0;
+                            Entity next1 = entityIterator.next();
+                            ContentValues values = next1.getEntityValues();
+                            Long rawId = values.getAsLong(RawContacts._ID);
+                            String id = values.getAsString(RawContacts.CONTACT_ID);
+                            if (!TextUtils.isEmpty(id)) {
+                                contactId = Long.parseLong(id);
+                            }
+                            Iterator&lt;Entity.NamedContentValues&gt; namedContentValuesIterator =
+                                    next1.getSubValues().iterator();
+                            while (namedContentValuesIterator.hasNext()) {
+                                ContentValues values1 = namedContentValuesIterator
+                                        .next().values;
+                                String mimeType = values1.getAsString(Data.MIMETYPE);
+                                if (CommonDataKinds.StructuredName
+                                        .CONTENT_ITEM_TYPE.equals(mimeType)) {
+                                    continue;
+                                }
+                                if (CommonDataKinds.Photo.CONTENT_ITEM_TYPE
+                                        .equals(mimeType)) {
+                                    photoId = values1.getAsLong(CommonDataKinds.Photo._ID)
+                                            .longValue();
+                                    continue;
+                                }
+                                if (CommonDataKinds.Phone.CONTENT_ITEM_TYPE.equals(mimeType)) {
+                                    String data1 = values1
+                                            .getAsString(CommonDataKinds.Phone.DATA1);
+                                    phoneList.add(data1);
+                                    if (!TextUtils.isEmpty(data1)
+                                            &amp;&amp; !mergePhoneList.contains(data1)) {
+                                        boolean contains = false;
+                                        for (int j = 0; j &lt; mergePhoneList.size(); j++) {
+                                            if (PhoneNumberUtils.compare(data1,
+                                                    mergePhoneList.get(j))) {
+                                                contains = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!contains) {
+                                            mergePhoneList.add(data1);
+                                        }
+                                        continue;
+                                    }
+                                }
+                                if (CommonDataKinds.Email.CONTENT_ITEM_TYPE.equals(mimeType)) {
+                                    String email = values1
+                                            .getAsString(CommonDataKinds.Email.DATA1);
+                                    emailList.add(email);
+                                    if (!mergeEmailList.contains(email)) {
+                                        mergeEmailList.add(email);
+                                    }
+                                    continue;
+                                }
+                            }
+                            Cursor cursor = resolver.query(Contacts.CONTENT_URI,
+                                    CONTACTS_PROJECTION, Contacts._ID.concat(&quot; = ?&quot;),
+                                    new String[]{String.valueOf(contactId)}, null);
+
+                            if (cursor != null &amp;&amp; cursor.moveToNext()) {
+                                String lookUp = cursor.getString(cursor
+                                        .getColumnIndex(Contacts.LOOKUP_KEY));
+                                String displayName = cursor.getString(cursor.getColumnIndex(
+                                        Contacts.DISPLAY_NAME_PRIMARY));
+                                lst1.add(new ContactsInfo(contactId, lookUp, photoId,
+                                        displayName, phoneList, emailList, rawId));
+                                cursor.close();
+                            }
+                        }
+                    } finally {
+                        if (entityIterator != null) {
+                            entityIterator.close();
+                        }
+                    }
+                    // for sim contacts, analyse if it can be merged.
+                    if (contactId != -1
+                            &amp;&amp; account.type.equals(SimContactsConstants.ACCOUNT_TYPE_SIM)) {
+                        int subscription = simContactsOperation.getSimSubscription(contactId);
+                        int oneSimAnrCount = MoreContactUtils.getOneSimAnrCount(
+                                context, subscription);
+                        int oneSimEmailCount = MoreContactUtils
+                                .getOneSimEmailCount(context, subscription);
+                        if (mergePhoneList.size() &gt; oneSimAnrCount + 1
+                                || mergeEmailList.size() &gt; oneSimEmailCount) {
+                            continue;
+                        }
+                    }
+                    if (mMergeRawContacts != null) {
+                        mMergeRawContacts.add(
+                            new MergeContacts(account.name, account.type, lst1));
+                    }
+                }
+                count += lst.size();
+                mProgressDialog.setProgress(count);
+            }
+        }
+    }
+    if (mSearchState) {
+        // search ended, change the flag.
+        mSearchState = false;
+        return true;
+    }
+    return false;
+}
+</code></pre>
+<h2 id="2-显示重复联系人"><a href="#2-显示重复联系人" class="headerlink" title="2.显示重复联系人"></a>2.显示重复联系人</h2><hr>
+<p>根据ArrayList&lt;MergeContacts&gt; 显示UI e.g. 根据mSelectCount 控制merge enanble或disable等</p>
+<hr>
+<pre><code class="java">//MergeContactActivity.java
+@Override
+protected void onListItemClick(ListView l, View v, int position, long id) {
+    MergeContactAdapter adapter = (MergeContactAdapter) l.getAdapter();
+    DuplicatesUtils.MergeContacts item = (DuplicatesUtils.MergeContacts) adapter
+            .getItem(position);
+    CheckBox cb = (CheckBox) v.findViewById(R.id.row_box);
+    // mark the mergeContacts item, which will be merged later, if true.
+    // calculate the selected count.
+    if (cb.isChecked() &amp;&amp; item.isChecked()) {
+        cb.setChecked(false);
+        item.setChecked(false);
+        mSelectCount--;
+    } else {
+        cb.setChecked(true);
+        item.setChecked(true);
+        mSelectCount++;
+    }
+    // if the selected count is &#39;0&#39;, disable the menuItem.
+    if (mSelectCount == 0 &amp;&amp; mergeItem != null &amp;&amp; mergeItem.isEnabled()) {
+        mergeItem.setEnabled(false);
+    } else if (mSelectCount &gt; 0 &amp;&amp; mergeItem != null &amp;&amp; !mergeItem.isEnabled()) {
+        mergeItem.setEnabled(true);
+    }
+}
+</code></pre>
+<h2 id="3-合并重复联系人"><a href="#3-合并重复联系人" class="headerlink" title="3.合并重复联系人"></a>3.合并重复联系人</h2><pre><code class="java">@Override
+public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+        case R.id.menu_merge: {
+            mProgressDialog = new MyProgressDialog(MergeContactActivity.this);
+            mProgressDialog.setMessage(this.getString(R.string.merging_contacts));
+            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            Iterator&lt;DuplicatesUtils.MergeContacts&gt; iterator = mMergeList.iterator();
+            while (iterator.hasNext()) {
+                DuplicatesUtils.MergeContacts next = iterator.next();
+                if (!next.isChecked()) {
+                    iterator.remove();
+                }
+            }
+            mProgressDialog.setMax(mMergeList.size());
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.show();
+            Thread thread = new MergeDuplicatedThread();
+            DuplicatesUtils.mMergeState = true;
+            thread.start();
+        }
+    }
+    return true;
+}
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+            <tag> contacts </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[开机导入Sim卡联系人]]></title>
+      <url>/2018/01/15/import-Sim-card-contacts-when-boot/</url>
+      <content type="html"><![CDATA[<h2 id="ContactsProvider"><a href="#ContactsProvider" class="headerlink" title="ContactsProvider"></a>ContactsProvider</h2><p>１.ContactsProvider.apk会启动一个广播接收器SystemStartReceiver来接收BOOT_COMPLETED的广播。</p>
+<p>２.ContactsProvider收到该广播后，将raw_contacts表里所有非本地联系人的数据都删除掉。<br>然后读取当前是否存在Sim卡，若存在，则发SYNC_ICC_CARD_CONTACTS广播。</p>
+<p>3.SystemStartReceiver收到广播后启动一个thread来执行读取sim卡联系人，并发送MSG_NOTIFY_ICC_LOADING的message给主线程，主线程收到后发loadicccontacts广播。</p>
+<p>4.开始读取ICC数据库的内容，IccProvider中会执行loadFromEf()，获得IIccPhoneBook接口，通过AIDL调用getAdnRecordsInEf()方法，获取sim卡上的全部联系人数据，返回cursor并装载成ArrayList。</p>
+<p>5.子线程给主线程发送MSG_NOTIFY_ICC_CHECKFINISHING的message，表示ICC读取完毕。主线程会发loadicccontacts广播。</p>
+<p>6.子线程发送消息MSG_INSERT_NEW_CONTACTS给主线程，进行数据库批量处理的操作，即把几个ContentProviderOperation打包在一起，Transaction事务机制，通过applyBatch()方法，主线程将这些sim卡联系人逐个的添加到raw_contacts表和data表中.</p>
+<h2 id="Contacts"><a href="#Contacts" class="headerlink" title="Contacts"></a>Contacts</h2><p>Contacts 收到loadicccontacts的广播，设置当前sim卡联系人已经开始读取，LOADICC_START<br>Contacts 收到loadicccontacts的广播，设置当前sim卡联系人已经读取完毕，LOADICC_FINISH</p>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+            <tag> 面试 </tag>
+            
+            <tag> contacts </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Build LineageOS for Nexus 5]]></title>
+      <url>/2018/01/05/Build-LineageOS-for-Nexus-5/</url>
+      <content type="html"><![CDATA[<h2 id="dependences"><a href="#dependences" class="headerlink" title="dependences"></a>dependences</h2><p>To build LineageOS, you’ll need:</p>
+<p>For Ubuntu 14.04:<br><code>bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev libesd0-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libwxgtk2.8-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev</code></p>
+<p>For Ubuntu 16.04 (xenial), substitute:<br><code>libwxgtk3.0-dev → libwxgtk2.8-dev</code><br><strong>Java</strong><br>Different versions of LineageOS require different JDK (Java Development Kit) versions.</p>
+<p>LineageOS 14.1: OpenJDK 1.8 (install openjdk-8-jdk)<br>LineageOS 11.0-13.0: OpenJDK 1.7 (install openjdk-7-jdk)</p>
+<p><strong>Enter the following to download the repo binary and make it executable (runnable):</strong><br>curl <a href="https://storage.googleapis.com/git-repo-downloads/repo" target="_blank" rel="noopener">https://storage.googleapis.com/git-repo-downloads/repo</a> &gt; ~/bin/repo<br>chmod a+x ~/bin/repo</p>
+<h2 id="Get-source-code"><a href="#Get-source-code" class="headerlink" title="Get source code"></a>Get source code</h2><pre><code class="bash">$ repo init -u https://github.com/LineageOS/android.git -b cm-14.1
+$ repo sync
+</code></pre>
+<p><strong>Prepare the device-specific code</strong></p>
+<pre><code class="bash">$ source build/envsetup.sh
+$ breakfast hammerhead
+</code></pre>
+<p><strong>Turn on caching to speed up build</strong></p>
+<p>Make use of ccache if you want to speed up subsequent builds by running:</p>
+<pre><code class="bash">$ export USE_CCACHE=1
+</code></pre>
+<p>and adding that line to your ~/.bashrc file. Then, specify the maximum amount of disk space you want ccache to use by typing this:</p>
+<pre><code class="bash">$ ccache -M 50G
+</code></pre>
+<h2 id="添加私有库"><a href="#添加私有库" class="headerlink" title="添加私有库"></a>添加私有库</h2><p>vim .repo/local_manifests/lge.xml</p>
+<pre><code>&lt;!-- nexus5 --&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;manifest&gt;
+  &lt;project name=&quot;TheMuppets/proprietary_vendor_lge.git&quot; path=&quot;vendor/lge&quot; remote=&quot;github&quot; /&gt;
+&lt;/manifest&gt;
+</code></pre><pre><code>&lt;!-- nexus6p --&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;manifest&gt;
+  &lt;project name=&quot;TheMuppets/proprietary_vendor_huawei.git&quot; path=&quot;vendor/huawei&quot; remote=&quot;github&quot; /&gt;
+&lt;/manifest&gt;
+</code></pre><p>之后再 repo sync 一次。</p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><pre><code class="bash">export WITH_SU=true //打开root
+brunch hammerhead
+</code></pre>
+<h2 id="刷机"><a href="#刷机" class="headerlink" title="刷机"></a>刷机</h2><pre><code class="bash">adb reboot bootloader
+source build/envsetup.sh
+
+#fastboot oem ramdump enable //如果bootloader download 模式未打开
+breakfast hammerhead
+fastboot -w flashall
+</code></pre>
+<p>PS:<br>关于科学上网:<br>1.将repo文件 <a href="https://android.googlesource.com/" target="_blank" rel="noopener">https://android.googlesource.com/</a> 全部使用 <a href="https://aosp.tuna.tsinghua.edu.cn/" target="_blank" rel="noopener">https://aosp.tuna.tsinghua.edu.cn/</a> 代替。<br>2.替换已有的 AOSP 源代码的 remote，将 .repo/manifest.xml 把其中的 aosp 这个 remote 的 fetch 从 <a href="https://android.googlesource.com" target="_blank" rel="noopener">https://android.googlesource.com</a> 改为 <a href="https://aosp.tuna.tsinghua.edu.cn/。" target="_blank" rel="noopener">https://aosp.tuna.tsinghua.edu.cn/。</a></p>
+<pre><code>&lt;manifest&gt;
+   &lt;remote  name=&quot;aosp&quot;
+-           fetch=&quot;https://android.googlesource.com&quot;
++           fetch=&quot;https://aosp.tuna.tsinghua.edu.cn&quot;
+            review=&quot;android-review.googlesource.com&quot; /&gt;
+   &lt;remote  name=&quot;github&quot;
+</code></pre><p>同时，修改 .repo/manifests.git/config，将<br><code>url = https://android.googlesource.com/platform/manifest</code><br>更改为<br><code>url = https://aosp.tuna.tsinghua.edu.cn/platform/manifest</code></p>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+            <tag> cm </tag>
+            
+            <tag> lineageos </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hexo+GitHub Pages搭建属于自己的blog]]></title>
+      <url>/2018/01/03/Hexo-GitHub-Pages-Establish-blog/</url>
+      <content type="html"><![CDATA[<p>Hexo是一个快速，简单，功能强大的开源博客框架-》<a href="https://hexo.io/" target="_blank" rel="noopener">官网</a><br>GitHub Pages 是一个不受限的网站空间。<br>两者相得益彰。给那些喜欢自己折腾的人提供一些借鉴。<br><a id="more"></a></p>
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="环境介绍"><a href="#环境介绍" class="headerlink" title="环境介绍"></a>环境介绍</h3><p>博主使用系统：Ubuntu 14.04<br>安装 node与npm</p>
+<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><pre><code class="bash">npm install hexo-cli -g
+</code></pre>
+<h3 id="初始化blog"><a href="#初始化blog" class="headerlink" title="初始化blog"></a>初始化blog</h3><pre><code class="bash">hexo init blog
+</code></pre>
+<p>至此，本地blog已经创建完成，是不是很简单，简单到没朋友</p>
+<h3 id="选择主题"><a href="#选择主题" class="headerlink" title="选择主题"></a>选择主题</h3><p>可以在<a href="https://hexo.io/themes/" target="_blank" rel="noopener">hexo官网</a>查看自己喜欢的主题<br>通过git clone [url] themes/xxx 将主题克隆到本地，<br>修改 <code>_config.yml</code> 中的theme：xxx</p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><pre><code class="bash">#创建一个新的文章
+$ hexo new &quot;文章名&quot;
+
+#生成静态文件
+$ hexo generate
+
+#将一个草稿发布出去
+$ hexo publish [layout] &lt;filename&gt;
+
+#启动一个本地服务器
+$ hexo server
+</code></pre>
+<p>更多命令移步<a href="https://hexo.io/docs/commands.html" target="_blank" rel="noopener">官方文档</a></p>
+<h3 id="搭建github-pages"><a href="#搭建github-pages" class="headerlink" title="搭建github pages"></a>搭建github pages</h3><p>本地blog已经搭建完成，现在可以发布到github pages上</p>
+<h4 id="注册github账户"><a href="#注册github账户" class="headerlink" title="注册github账户"></a>注册github账户</h4><p>到<a href="https://github.com/" target="_blank" rel="noopener">github官网</a>注册一个github账户</p>
+<h4 id="配置登录免密码"><a href="#配置登录免密码" class="headerlink" title="配置登录免密码"></a>配置登录免密码</h4><p>移步 </p>
+<h4 id="创建github远程仓库"><a href="#创建github远程仓库" class="headerlink" title="创建github远程仓库"></a>创建github远程仓库</h4><p>在github上创建一个仓库 <code>xxx.github.io</code> xxx为自己的github用户名</p>
+<h4 id="安装插件"><a href="#安装插件" class="headerlink" title="安装插件"></a>安装插件</h4><pre><code class="bash">$ npm install hexo-deployer-git --save
+</code></pre>
+<h4 id="配置Hexo"><a href="#配置Hexo" class="headerlink" title="配置Hexo"></a>配置Hexo</h4><p>修改 <code>_comfig.yml</code>,xxx为你的用户名</p>
+<pre><code class="xml">deploy:
+   type: git
+   repo: git@github.com:xxx/xxx.github.io.git
+   branch: master
+</code></pre>
+<h4 id="推送服务器"><a href="#推送服务器" class="headerlink" title="推送服务器"></a>推送服务器</h4><pre><code class="bash">$ hexo deploy
+</code></pre>
+<blockquote>
+<p>若出现<code>ERROR Deployer not found: git</code>报错，请执行上面安装插件步骤</p>
+</blockquote>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>打开 <code>xxx.github.io</code> ，就能看到你的blog了</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> hexo </tag>
+            
+            <tag> blog </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[联系人号码模糊查询]]></title>
+      <url>/2018/01/01/contacts-phone-number-fuzzy-search/</url>
+      <content type="html"><![CDATA[<p>AOSP的联系人查询,匹配的号码是从头开始匹配,不支持任意子串的匹配.eg.1234567, 123能匹配, 456不能匹配。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+            <tag> contacts </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[快捷键说明]]></title>
+      <url>/2017/12/30/3-hexo-shortcuts/</url>
+      <content type="html"><![CDATA[<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><h3 id="搜索框"><a href="#搜索框" class="headerlink" title="搜索框"></a>搜索框</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">Key</th>
+<th style="text-align:left">Descption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">ESC</td>
+<td style="text-align:left">1.如果输入框有内容，清除内容<br>2.如果输入框无内容，失去焦点</td>
+</tr>
+<tr>
+<td style="text-align:left">i/I</td>
+<td style="text-align:left">获取焦点</td>
+</tr>
+<tr>
+<td style="text-align:left">下</td>
+<td style="text-align:left">向下选择文章</td>
+</tr>
+<tr>
+<td style="text-align:left">上</td>
+<td style="text-align:left">向上选择文章</td>
+</tr>
+<tr>
+<td style="text-align:left">回车</td>
+<td style="text-align:left">打开当前选中的文章，若没有，则默认打开第一个</td>
+</tr>
+</tbody>
+</table>
+<h3 id="全局"><a href="#全局" class="headerlink" title="全局"></a>全局</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">Key</th>
+<th style="text-align:left">Descption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">s/S</td>
+<td style="text-align:left">全屏/取消全屏</td>
+</tr>
+<tr>
+<td style="text-align:left">w/W</td>
+<td style="text-align:left">打开/关闭文章目录</td>
+</tr>
+<tr>
+<td style="text-align:left">j/J</td>
+<td style="text-align:left">向下滑动</td>
+</tr>
+<tr>
+<td style="text-align:left">k/K</td>
+<td style="text-align:left">向上滑动</td>
+</tr>
+<tr>
+<td style="text-align:left">gg/GG</td>
+<td style="text-align:left">到最顶端</td>
+</tr>
+<tr>
+<td style="text-align:left">shift+G/g</td>
+<td style="text-align:left">到最下端</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+      
+        <categories>
+            
+            <category> 工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> hexo </tag>
+            
+            <tag> 3-hexo </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[blog init]]></title>
+      <url>/2017/12/23/blog-init/</url>
+      <content type="html"><![CDATA[<pre><code class="bash">#!/bin/
+mkdir ~/hexo
+cd ~/hexo
+git clone https://github.com/steinswang/blog.git
+git clone https://github.com/steinswang/steinswang.github.io.git
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> init </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> tools </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[正则表达式详解]]></title>
+      <url>/2017/10/04/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E8%AF%A6%E8%A7%A3/</url>
+      <content type="html"><![CDATA[<h2 id="本文目标"><a href="#本文目标" class="headerlink" title="本文目标"></a>本文目标</h2><blockquote>
+<p>本文旨在更加简洁清晰的展现正则表达式， <code>第一部分</code> 是对正则表达式语法的简洁介绍， <code>第二部分</code> 则是常用正则表达式的示例。</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="简介及语法"><a href="#简介及语法" class="headerlink" title="简介及语法"></a>简介及语法</h2><h3 id="正则表达式是什么"><a href="#正则表达式是什么" class="headerlink" title="正则表达式是什么"></a>正则表达式是什么</h3><blockquote>
+<p>在编写处理字符串的程序或网页时，经常会有查找符合某些复杂规则的字符串的需要。正则表达式就是用于描述这些规则的工具。换句话说，正则表达式就是记录文本规则的代码。</p>
+<p>正则表达式语言由两种基本字符类型组成：原义（正常）<code>文本字符</code>和<code>元字符</code>。元字符使正则表达式具有处理能力。</p>
+</blockquote>
+<h3 id="常用元字符"><a href="#常用元字符" class="headerlink" title="常用元字符"></a>常用元字符</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:left">做什么用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>.</code></td>
+<td style="text-align:left">匹配除换行符以外的任意字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\w</code></td>
+<td style="text-align:left">匹配字母或数字或下划线或汉字</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\s</code></td>
+<td style="text-align:left">匹配任意的空白符，包括空格，制表符（Tab），换行符，中文全角空格等）</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\d</code></td>
+<td style="text-align:left">匹配数字</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\b</code></td>
+<td style="text-align:left">匹配单词的开始或结束</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>^</code></td>
+<td style="text-align:left">匹配字符串的开始</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>$</code></td>
+<td style="text-align:left">匹配字符串的结束</td>
+</tr>
+</tbody>
+</table>
+<h3 id="字符转义"><a href="#字符转义" class="headerlink" title="字符转义"></a>字符转义</h3><blockquote>
+<p>如果你想查找元字符本身的话，比如你查找 <code>.</code> ,或者 <code>*</code> ,就出现了问题：你没办法指定它们，因为它们会被解释成别的意思。这时你就得使用 <code>\</code> 来取消这些字符的特殊意义。因此，你应该使用 <code>\.</code> 和 <code>\*</code> 。当然，要查找 <code>\</code> 本身，你也得用 <code>\\</code> .<br>例如： <code>deerchao\.net</code> 匹配 <strong>deerchao.net</strong>，<code>C:\\Windows</code> 匹配 <strong>C:\Windows</strong> 。</p>
+</blockquote>
+<h3 id="重复"><a href="#重复" class="headerlink" title="重复"></a>重复</h3><blockquote>
+<p>你已经看过了前面的 <code>*</code> , <code>+</code> , <code>{2}</code> , <code>{5,12}</code> 这几个匹配重复的方式了。下面是正则表达式中所有的限定符(指定数量的代码，例如*,{5,12}等)</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:left">做什么用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>*</code></td>
+<td style="text-align:left">重复零次或更多次</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>+</code></td>
+<td style="text-align:left">重复一次或更多次</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>?</code></td>
+<td style="text-align:left">重复零次或一次</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>{n}</code></td>
+<td style="text-align:left">重复n次</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>{n,}</code></td>
+<td style="text-align:left">重复n次或更多次</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>{n,m}</code></td>
+<td style="text-align:left">重复n到m次</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>下面是一些重复的示例：<br><code>Windows\d+</code> 匹配Windows后面跟1个或更多数字<br><code>^\w+</code> 匹配一行的第一个单词(或整个字符串的第一个单词，具体匹配哪个意思得看选项设置)</p>
+</blockquote>
+<h3 id="字符类"><a href="#字符类" class="headerlink" title="字符类"></a>字符类</h3><blockquote>
+<p>要想查找数字，字母或数字，空白是很简单的，因为已经有了对应这些字符集合的元字符，但是如果你想匹配没有预定义元字符的字符集合(比如元音字母a,e,i,o,u),应该怎么办？<br>很简单，你只需要在方括号里列出它们就行了，像 <code>[aeiou]</code> 就匹配任何一个英文元音字母， <code>[.?!]</code> 匹配标点符号(.或?或!)。<br>我们也可以轻松地指定一个字符范围，像 <code>[0-9]</code> 代表的含意与 <code>\d</code> 就是完全一致的：一位数字；同理[a-z0-9A-Z_]也完全等同于 <code>\w</code> （如果只考虑英文的话）。<br>下面是一个更复杂的表达式： <code>\(?0\d{2}[) -]?\d{8}</code> 。<br>这个表达式可以匹配几种格式的电话号码，像(010)88886666，或022-22334455，或02912345678等。我们对它进行一些分析吧：首先是一个转义字符(,它能出现0次或1次(?),然后是一个0，后面跟着2个数字(\d{2})，然后是)或-或空格中的一个，它出现1次或不出现(?)，最后是8个数字(\d{8})。</p>
+</blockquote>
+<h3 id="分支条件"><a href="#分支条件" class="headerlink" title="分支条件"></a>分支条件</h3><blockquote>
+<p>正则表达式里的分枝条件指的是有几种规则，如果满足其中任意一种规则都应该当成匹配，具体方法是用|把不同的规则分隔开。<br>示例： <code>0\d{2}-\d{8}|0\d{3}-\d{7}</code><br>这个表达式匹配3位区号的电话号码，其中区号可以用小括号括起来，也可以不用，区号与本地号间可以用连字号或空格间隔，也可以没有间隔。你可以试试用分枝条件把这个表达式扩展成也支持4位区号的。<br>示例： <code>\d{5}-\d{4}|\d{5}</code><br>这个表达式用于匹配美国的邮政编码。美国邮编的规则是5位数字，或者用连字号间隔的9位数字。之所以要给出这个示例是因为它能说明一个问题：<strong>使用分枝条件时，要注意各个条件的顺序</strong>。如果你把它改成 <code>\d{5}|\d{5}-\d{4}</code> 的话，那么就只会匹配5位的邮编(以及9位邮编的前5位)。原因是匹配分枝条件时，将会从左到右地测试每个条件，如果满足了某个分枝的话，就不会去再管其它的条件了。</p>
+</blockquote>
+<h3 id="分组"><a href="#分组" class="headerlink" title="分组"></a>分组</h3><blockquote>
+<p>重复单个字符，直接在字符后面加上限定符就行了。但如果想要重复多个字符，我们可以用小括号来指定 <strong>子表达式</strong>(也叫作<strong>分组</strong>)。<br><code>(\d{1,3}\.){3}\d{1,3}</code> 是一个简单的IP地址匹配表达式。要理解这个表达式，请按下列顺序分析它： <code>\d{1,3}</code> 匹配1到3位的数字， <code>(\d{1,3}\.){3}</code> 匹配三位数字加上一个英文句号(这个整体也就是这个分组)重复3次，最后再加上一个一到三位的数字 <code>(\d{1,3})</code> 。<br>不幸的是，它也将匹配 <em>256.300.888.999</em> 这种不可能存在的IP地址。我们只能使用冗长的分组，选择，字符串来描述一个 <strong>正确的IP地址：</strong> <code>((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)</code></p>
+</blockquote>
+<h3 id="反义"><a href="#反义" class="headerlink" title="反义"></a>反义</h3><blockquote>
+<p>有时需要查找不属于某个能简单定义的字符类的字符。比如想查找除了数字以外，其它任意字符都行的情况，这时需要用到反义：</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:left">做什么用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>\W</code></td>
+<td style="text-align:left">匹配任意不是字母，数字，下划线，汉字的字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\S</code></td>
+<td style="text-align:left">匹配任意不是空白符的字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\D</code></td>
+<td style="text-align:left">匹配任意非数字的字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\B</code></td>
+<td style="text-align:left">匹配不是单词开头或结束的位置</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>[^x]</code></td>
+<td style="text-align:left">匹配除了x以外的任意字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>[^aeiou]</code></td>
+<td style="text-align:left">匹配除了aeiou这几个字母以外的任意字符</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>示例： <code>\S+</code> 匹配不包含空白符的字符串。 <code>&lt;a[^&gt;]+&gt;</code> 匹配用尖括号括起来的以a开头的字符串。</p>
+</blockquote>
+<h3 id="后向引用"><a href="#后向引用" class="headerlink" title="后向引用"></a>后向引用</h3><blockquote>
+<p>使用小括号指定一个子表达式后，<strong>匹配这个子表达式</strong> 的文本(也就是此分组捕获的内容)可以在表达式或其它程序中作进一步的处理。默认情况下，每个分组会自动拥有一个 <strong>组号</strong>，规则是：从左向右，以分组的左括号为标志，第一个出现的分组的组号为1，第二个为2，以此类推。<br> <strong>后向引用</strong> 用于重复搜索前面某个分组匹配的文本。<br>示例： <code>\b(\w+)\b\s+\1\b</code> 可以用来匹配重复的单词，像go go, 或者kitty kitty。这个表达式首先是一个单词，也就是单词开始处和结束处之间的多于一个的字母或数字 <code>\b(\w+)\b</code> ，这个单词会被捕获到编号为1的分组中，然后是1个或几个空白符<code>\s+</code>，最后是分组1中捕获的内容（也就是前面匹配的那个单词） <code>\1</code> 。<br>你也可以自己指定子表达式的 <strong>组名</strong>.要指定一个子表达式的组名，请使用这样的语法： <code>(?&lt;Word&gt;\w+)</code> (或者把尖括号换成 <code>&#39;</code> 也行： <code>(?&#39;Word&#39;\w+))</code>,这样就把<code>\w+</code>的组名指定为 <strong>Word</strong> 了。要反向引用这个分组捕获的内容，你可以使用 <code>\k&lt;Word&gt;</code> ,所以上一个示例也可以写成这样： <code>\b(?&lt;Word&gt;\w+)\b\s+\k&lt;Word&gt;\b</code> 。</p>
+</blockquote>
+<h3 id="零宽断言"><a href="#零宽断言" class="headerlink" title="零宽断言"></a>零宽断言</h3><blockquote>
+<p>接下来的四个用于查找在某些内容(但并不包括这些内容)之前或之后的东西，也就是说它们像\b,^,$那样用于指定一个位置，这个位置应该满足一定的条件(即断言)，因此它们也被称为 <strong>零宽断言</strong>。<br><code>(?=exp)</code> 也叫 <strong>零宽度正预测先行断言</strong>，它断言自身出现的位置的后面能匹配表达式exp。比如<code>\b\w+(?=ing\b)</code>，匹配以ing结尾的单词的前面部分(除了ing以外的部分)，如查找 <em>I’m singing while you’re dancing.</em> 时，它会匹配 sing 和 danc 。<br><code>(?&lt;=exp)</code> 也叫 <strong>零宽度正回顾后发断言</strong> ，它断言自身出现的位置的前面能匹配表达式exp。比如 <code>(?&lt;=\bre)\w+\b</code> 会匹配以re开头的单词的后半部分(除了re以外的部分)，例如在查找 <em>reading a book</em> 时，它匹配ading。<br>假如你想要给一个很长的数字中每三位间加一个逗号(当然是从右边加起了)，你可以这样查找需要在前面和里面添加逗号的部分： <code>((?&lt;=\d)\d{3})+\b</code> ，用它对1234567890进行查找时结果是234567890。<br>下面这个示例同时使用了这两种断言： <code>(?&lt;=\s)\d+(?=\s)</code> 匹配以空白符间隔的数字( <strong>再次强调，不包括这些空白符</strong> )。</p>
+</blockquote>
+<h3 id="负向零宽断言"><a href="#负向零宽断言" class="headerlink" title="负向零宽断言"></a>负向零宽断言</h3><blockquote>
+<p>前面我们提到过怎么查找不是某个字符或不在某个字符类里的字符的方法(反义)。但是如果我们只是想要确保某个字符没有出现，但并不想去匹配它时怎么办？例如，如果我们想查找这样的单词–它里面出现了字母q,但是q后面跟的不是字母u,我们可以尝试这样：<br><code>\b\w*q[^u]\w*\b</code> 匹配 <em>包含后面不是字母u的字母q的单词</em> 。但是如果多做测试(或者你思维足够敏锐，直接就观察出来了)，你会发现，如果q出现在单词的结尾的话，像Iraq,Benq，这个表达式就会出错。这是因为[^u]总要匹配一个字符，所以如果q是单词的最后一个字符的话，后面的[^u]将会匹配q后面的单词分隔符(可能是空格，或者是句号或其它的什么)，后面的 <code>\w*\b</code> 将会匹配下一个单词，于是 <code>\b\w*q[^u]\w*\b</code> 就能匹配整个Iraq fighting。<strong>负向零宽断言</strong> 能解决这样的问题，因为它只匹配一个位置，并不消费任何字符。现在，我们可以这样来解决这个问题： <code>\b\w*q(?!u)\w*\b</code> 。<br><strong>零宽度负预测先行断言</strong>(?!exp)，断言此位置的后面不能匹配表达式exp。例如： <code>\d{3}(?!\d)</code> 匹配三位数字，而且这三位数字的后面不能是数字； <code>\b((?!abc)\w)+\b</code> 匹配不包含连续字符串abc的单词。<br>同理，我们可以用(?&lt;!exp),<strong>零宽度负回顾后发断言来断言</strong> 此位置的前面不能匹配表达式exp：(?&lt;![a-z])\d{7}匹配前面不是小写字母的七位数字。<br>一个更复杂的示例：<code>(?&lt;=&lt;(\w+)&gt;).*(?=&lt;\/\1&gt;)</code> 匹配不包含属性的简单HTML标签内里的内容。<code>(?&lt;=&lt;(\w+)&gt;)</code> 指定了这样的 <strong>前缀</strong>：被尖括号括起来的单词(比如可能是<b>)，然后是. <code>*</code> (任意的字符串),最后是一个 <strong>后缀</strong> <code>(?=&lt;\/\1&gt;)</code>。注意后缀里的 \/ ，它用到了前面提过的字符转义；\1则是一个反向引用，引用的正是捕获的第一组，前面的 <code>(\w+)</code> 匹配的内容，这样如果前缀实际上是<b>的话，后缀就是</b>了。整个表达式匹配的是<b>和</b>之间的内容(再次提醒，不包括前缀和后缀本身)。</b></p>
+</blockquote>
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><blockquote>
+<p>小括号的另一种用途是通过语法(?#comment)来包含注释。例如：<code>2[0-4]\d(?#200-249)|25[0-5](?#250-255)|[01]?\d\d?(?#0-199)</code>。<br>要包含注释的话，最好是启用“忽略模式里的空白符”选项，这样在编写表达式时能任意的添加空格，Tab，换行，而实际使用时这些都将被忽略。启用这个选项后，在#后面到这一行结束的所有文本都将被当成注释忽略掉。例如，我们可以前面的一个表达式写成这样：<br>      <code>(?&lt;=</code>    # 断言要匹配的文本的前缀<br>      <code>&lt;(\w+)&gt;</code> # 查找尖括号括起来的字母或数字(即HTML/XML标签)<br>      <code>)</code>       # 前缀结束<br>      <code>.*</code>      # 匹配任意文本<br>      <code>(?=</code>     # 断言要匹配的文本的后缀<br>      <code>&lt;\/\1&gt;</code>  # 查找尖括号括起来的内容：前面是一个”/“，后面是先前捕获的标签<br>      <code>)</code>       # 后缀结束</p>
+</blockquote>
+<h3 id="贪婪与懒惰"><a href="#贪婪与懒惰" class="headerlink" title="贪婪与懒惰"></a>贪婪与懒惰</h3><blockquote>
+<p>当正则表达式中包含能接受重复的限定符时，通常的行为是（在使整个表达式能得到匹配的前提下）匹配 <strong>尽可能多</strong> 的字符。以这个表达式为例： <code>a.*b</code> ，它将会匹配最长的以a开始，以b结束的字符串。如果用它来搜索aabab的话，它会匹配整个字符串aabab。这被称为 <strong>贪婪匹配</strong>。<br>有时，我们更需要 <strong>懒惰匹配</strong>，也就是匹配尽可能少的字符。前面给出的限定符都可以被转化为懒惰匹配模式，只要在它后面加上一个问号 ? 。这样 <code>.*?</code> 就意味着匹配任意数量的重复，但是在能使整个匹配成功的前提下使用最少的重复。<br>示例： <code>a.*?b</code> 匹配最短的，以a开始，以b结束的字符串。如果把它应用于aabab的话，它会匹配aab（第一到第三个字符）和ab（第四到第五个字符）。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">语法</th>
+<th style="text-align:left">做什么用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>*?</code></td>
+<td style="text-align:left">重复任意次，但尽可能少重复</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>+?</code></td>
+<td style="text-align:left">重复1次或更多次，但尽可能少重复</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>??</code></td>
+<td style="text-align:left">重复0次或1次，但尽可能少重复</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>{n,m}?</code></td>
+<td style="text-align:left">重复n到m次，但尽可能少重复</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>{n,}?</code></td>
+<td style="text-align:left">重复n次以上，但尽可能少重复</td>
+</tr>
+</tbody>
+</table>
+<h3 id="其他元字符"><a href="#其他元字符" class="headerlink" title="其他元字符"></a>其他元字符</h3><table>
+<thead>
+<tr>
+<th style="text-align:left">元字符</th>
+<th style="text-align:left">做什么用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>\a</code></td>
+<td style="text-align:left">报警字符(打印它的效果是电脑嘀一声)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\b</code></td>
+<td style="text-align:left">通常是单词分界位置，但如果在字符类里使用代表退格</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\t</code></td>
+<td style="text-align:left">制表符，Tab</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\r</code></td>
+<td style="text-align:left">回车</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\v</code></td>
+<td style="text-align:left">竖向制表符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\f</code></td>
+<td style="text-align:left">换页符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\n</code></td>
+<td style="text-align:left">换行符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\e</code></td>
+<td style="text-align:left">Escape</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\0nn</code></td>
+<td style="text-align:left">ASCII代码中八进制代码为nn的字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\xnn</code></td>
+<td style="text-align:left">ASCII代码中十六进制代码为nn的字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\unnnn</code></td>
+<td style="text-align:left">Unicode代码中十六进制代码为nnnn的字符</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\cN</code></td>
+<td style="text-align:left">ASCII控制字符。比如\cC代表Ctrl+C</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\A</code></td>
+<td style="text-align:left">字符串开头(类似^，但不受处理多行选项的影响)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\Z</code></td>
+<td style="text-align:left">字符串结尾或行尾(不受处理多行选项的影响)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\z</code></td>
+<td style="text-align:left">字符串结尾(类似$，但不受处理多行选项的影响)</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\G</code></td>
+<td style="text-align:left">当前搜索的开头</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>\p{name}</code></td>
+<td style="text-align:left">Unicode中命名为name的字符类，例如\p{IsGreek}</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>(?&gt;exp)</code></td>
+<td style="text-align:left">贪婪子表达式</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>(?&lt;x&gt;-&lt;y&gt;exp)</code></td>
+<td style="text-align:left">平衡组</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>(?im-nsx:exp)</code></td>
+<td style="text-align:left">在子表达式exp中改变处理选项</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>(?im-nsx)</code></td>
+<td style="text-align:left">为表达式后面的部分改变处理选项</td>
+</tr>
+<tr>
+<td style="text-align:left">[1]</td>
+<td style="text-align:left">把exp当作零宽正向先行断言，如果在这个位置能匹配，使用yes作为此组的表达式；否则使用no</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>(?(exp)yes)</code></td>
+<td style="text-align:left">同上，只是使用空表达式作为no</td>
+</tr>
+<tr>
+<td style="text-align:left">[2]</td>
+<td style="text-align:left">如果命名为name的组捕获到了内容，使用yes作为表达式；否则使用no</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>(?(name)yes)</code></td>
+<td style="text-align:left">同上，只是使用空表达式作为no</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[1]:<code>(?(exp)yes|no)</code></p>
+<p>[2]:<code>(?(name)yes|no)</code></p>
+</blockquote>
+<h2 id="正则表达式常用实例"><a href="#正则表达式常用实例" class="headerlink" title="正则表达式常用实例"></a>正则表达式常用实例</h2><h3 id="账号-密码"><a href="#账号-密码" class="headerlink" title="账号/密码"></a>账号/密码</h3><pre><code class="java">帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线) = &quot;^[a-zA-Z][a-zA-Z0-9_]{4,15}$&quot;
+密码(以字母开头，长度在6~18之间，只能包含字母、数字和下划线) = &quot;^[a-zA-Z]\w{5,17}$&quot;
+强密码(必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间) = &quot;^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$&quot;
+</code></pre>
+<h3 id="字符串校验"><a href="#字符串校验" class="headerlink" title="字符串校验"></a>字符串校验</h3><pre><code class="java">汉字 = &quot;^[\u4e00-\u9fa5]{0,}$&quot;;
+英文和数字 = &quot;^[A-Za-z0-9]+$ 或 ^[A-Za-z0-9]{4,40}$&quot;;
+长度为3-20的所有字符 = &quot;^.{3,20}$&quot;；
+由26个英文字母组成的字符串 = &quot;^[A-Za-z]+$&quot;；
+由26个大写英文字母组成的字符串 = &quot;^[A-Z]+$&quot;；
+由26个小写英文字母组成的字符串 = &quot;^[a-z]+$&quot;；
+由数字和26个英文字母组成的字符串 = &quot;^[A-Za-z0-9]+$&quot;；
+由数字、26个英文字母或者下划线组成的字符串 = &quot;^\w+$ 或 ^\w{3,20}$&quot;；
+中文、英文、数字包括下划线 = &quot;^[\u4E00-\u9FA5A-Za-z0-9_]+$&quot;；
+中文、英文、数字但不包括下划线等符号 = &quot;^[\u4E00-\u9FA5A-Za-z0-9]+$ 或 ^[\u4E00-\u9FA5A-Za-z0-9]{2,20}$&quot;；
+禁止输入含有~的字符 = &quot;[^~\x22]+&quot;；
+</code></pre>
+<h3 id="手机号"><a href="#手机号" class="headerlink" title="手机号"></a>手机号</h3><pre><code class="java">/**
+ * 手机号码
+ * 移动：134,135,136,137,138,139,147,150,151,152,157,158,159,170,178,182,183,184,187,188
+ * 联通：130,131,132,145,152,155,156,1709,171,176,185,186
+ * 电信：133,134,153,1700,177,180,181,189
+ */
+String MOBILE = &quot;^1(3[0-9]|4[57]|5[0-35-9]|7[01678]|8[0-9])\\d{8}$&quot;;
+/**
+ * 中国移动：China Mobile
+ * 134,135,136,137,138,139,147,150,151,152,157,158,159,170,178,182,183,184,187,188
+ */
+String CM = &quot;^1(3[4-9]|4[7]|5[0-27-9]|7[0]|7[8]|8[2-478])\\d{8}$&quot;;
+/**
+ * 中国联通：China Unicom
+ * 130,131,132,145,152,155,156,1709,171,176,185,186
+ */
+String CU = &quot;^1(3[0-2]|4[5]|5[56]|709|7[1]|7[6]|8[56])\\d{8}$&quot;;
+/**
+ * 中国电信：China Telecom
+ * 133,134,153,1700,177,180,181,189
+ */
+String CT = &quot;^1(3[34]|53|77|700|8[019])\\d{8}$&quot;;
+</code></pre>
+<h3 id="IP地址"><a href="#IP地址" class="headerlink" title="IP地址"></a>IP地址</h3><pre><code class="java">String IPREGEXP = &quot;((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)&quot;;
+</code></pre>
+<h3 id="EMAIL地址"><a href="#EMAIL地址" class="headerlink" title="EMAIL地址"></a>EMAIL地址</h3><pre><code class="java">Email地址 = &quot;^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$&quot;;
+</code></pre>
+<h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><pre><code class="java">域名 = &quot;[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(/.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+/.?&quot;;
+InternetURL = &quot;[a-zA-z]+://[^\s]* 或 ^http://([\w-]+\.)+[\w-]+(/[\w-./?%&amp;=]*)?$&quot;
+</code></pre>
+<h3 id="身份证"><a href="#身份证" class="headerlink" title="身份证"></a>身份证</h3><pre><code class="java">身份证号(15位、18位数字) = &quot;^\d{15}|\d{18}$&quot;
+短身份证号码(数字、字母x结尾) = &quot;^([0-9]){7,18}(x|X)?$ 或 ^\d{8,18}|[0-9x]{8,18}|[0-9X]{8,18}?$&quot;
+</code></pre>
+<h3 id="数字类校验"><a href="#数字类校验" class="headerlink" title="数字类校验"></a>数字类校验</h3><pre><code class="java">数字 = &quot;^[0-9]*$&quot;;
+n位的数字 = &quot;^\d{n}$&quot;;
+至少n位的数字 = &quot;^\d{n,}$&quot;;
+m-n位的数字 = &quot;^\d{m,n}$&quot;;
+零和非零开头的数字 = &quot;^(0|[1-9][0-9]*)$&quot;;
+非零开头的最多带两位小数的数字 = &quot;^([1-9][0-9]*)+(.[0-9]{1,2})?$&quot;;
+带1-2位小数的正数或负数 = &quot;^(\-)?\d+(\.\d{1,2})?$&quot;;
+正数、负数、和小数 = &quot;^(\-|\+)?\d+(\.\d+)?$&quot;;
+有两位小数的正实数 = &quot;^[0-9]+(.[0-9]{2})?$&quot;;
+有1~3位小数的正实数 = &quot;^[0-9]+(.[0-9]{1,3})?$&quot;;
+非零的正整数 = &quot;^[1-9]\d*$ 或 ^([1-9][0-9]*){1,3}$ 或 ^\+?[1-9][0-9]*$&quot;;
+非零的负整数 = &quot;^\-[1-9][]0-9&quot;*$&quot; 或 &quot;^-[1-9]\d*$&quot;;
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> 工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 正则表达式 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[gradle问题]]></title>
+      <url>/2017/01/15/gradle-issue/</url>
+      <content type="html"><![CDATA[<h2 id="gradle-常见脚本"><a href="#gradle-常见脚本" class="headerlink" title="gradle 常见脚本"></a>gradle 常见脚本</h2><p><code>编译出来的apk重命名</code>:</p>
+<pre><code class="xml">android.applicationVariants.all { variant -&gt;
+    variant.outputs.each { output -&gt;
+        def outputFile = output.outputFile
+        if (outputFile != null &amp;&amp; outputFile.name.endsWith(&#39;.apk&#39;)) {
+            def fileName = outputFile.name.replace(&quot;.apk&quot;, &quot;-${defaultConfig.versionCode}.apk&quot;)
+            output.outputFile = new File(outputFile.parent, fileName)
+        }
+    }
+}
+</code></pre>
+<p><code>productFlavors</code>:多版本编译apk(eg.大陆版/欧美版/台湾版)</p>
+<pre><code class="xml">productFlavors {
+    generic {
+        buildConfigField &quot;boolean&quot;, &quot;MOBILE&quot;, &quot;false&quot;
+        buildConfigField &quot;String&quot;, &quot;UPDATE_URL&quot;, &quot;/api/xxx&quot;
+    }
+    china {
+        buildConfigField &quot;boolean&quot;, &quot;MOBILE&quot;, &quot;true&quot;
+        buildConfigField &quot;String&quot;, &quot;UPDATE_URL&quot;, &quot;/api/yyy&quot;
+
+    }
+    link {
+        buildConfigField &quot;boolean&quot;, &quot;MOBILE&quot;, &quot;false&quot;
+        buildConfigField &quot;String&quot;, &quot;UPDATE_URL&quot;, &quot;/api/zzz&quot;
+    }
+}
+</code></pre>
+<p><code>signingConfigs</code>:</p>
+<pre><code class="xml">signingConfigs {
+    debug_key {
+        keyAlias &#39;androiddebugkey&#39;
+        keyPassword &#39;android&#39;
+        storePassword &#39;android&#39;
+        storeFile file(&#39;keys/debug.keystore&#39;)
+
+    }
+    HMS_release_key {
+        keyAlias &#39;platform&#39;
+        keyPassword &#39;android&#39;
+        storePassword &#39;android&#39;
+        storeFile file(&#39;keys/release.keystore&#39;)
+    }
+}
+</code></pre>
+<p><code>buildTypes</code>: depends: <code>signingConfigs</code></p>
+<pre><code class="xml">buildTypes {
+    release {
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile(&#39;proguard-android.txt&#39;), &#39;proguard-rules.pro&#39;
+        signingConfig signingConfigs.release_key
+        buildConfigField &quot;boolean&quot;, &quot;DEBUG_MODE&quot;, &quot;false&quot;
+    }
+    debug {
+        minifyEnabled = false
+        signingConfig signingConfigs.debug_key
+        buildConfigField &quot;boolean&quot;, &quot;DEBUG_MODE&quot;, &quot;true&quot;
+    }
+}
+</code></pre>
+<h2 id="使用国内repositories镜像"><a href="#使用国内repositories镜像" class="headerlink" title="使用国内repositories镜像"></a>使用国内repositories镜像</h2><p>vim /home/XXX/.gradle/init.gradle</p>
+<pre><code class="xml">allprojects{
+    repositories {
+        def ALIYUN_REPOSITORY_URL = &#39;http://maven.aliyun.com/nexus/content/groups/public&#39;
+        def ALIYUN_JCENTER_URL = &#39;http://maven.aliyun.com/nexus/content/repositories/jcenter&#39;
+        all { ArtifactRepository repo -&gt;
+            if(repo instanceof MavenArtifactRepository){
+                def url = repo.url.toString()
+                if (url.startsWith(&#39;https://repo1.maven.org/maven2&#39;)) {
+                    project.logger.lifecycle &quot;Repository ${repo.url} replaced by $ALIYUN_REPOSITORY_URL.&quot;
+                    remove repo
+                }
+                if (url.startsWith(&#39;https://jcenter.bintray.com/&#39;)) {
+                    project.logger.lifecycle &quot;Repository ${repo.url} replaced by $ALIYUN_JCENTER_URL.&quot;
+                    remove repo
+                }
+            }
+        }
+        maven {
+                url ALIYUN_REPOSITORY_URL
+            url ALIYUN_JCENTER_URL
+        }
+    }
+}
+</code></pre>
+<h2 id="项目打包发布"><a href="#项目打包发布" class="headerlink" title="项目打包发布"></a>项目打包发布</h2><ol>
+<li>Android 项目打包</li>
+</ol>
+<p><code>gradlew assemble</code></p>
+<ol>
+<li>Desktop/HTML 项目打包</li>
+</ol>
+<p><code>gradlew dist</code></p>
+<p>Desktop: </p>
+<p>执行这个命令，将在项目的 <code>build/libs/</code> 文件夹下创建一个可运行的 jar 包。这个 jar 包中包含了所有需要的代码和资源，可以脱离整个项目，只要有 JDK 或 JRE 环境即可运行。运行这个 JAR 文件的命令： <code>java -jar jar-file-name.jar</code>。</p>
+<pre><code class="xml">task dist(type: FatCapsule) {
+    applicationClass mainClass
+    archiveName project.name + &quot;.jar&quot;
+    capsuleManifest {
+        systemProperties[&#39;log4j.configuration&#39;] = &#39;log4j.xml&#39;
+        jvmArgs = [&#39;-Xms768m&#39;, &#39;-Xmx1g&#39;]
+        minJavaVersion = &#39;1.6.0&#39;
+    }
+}
+</code></pre>
+<p>HTML: </p>
+<p>执行这个命令，将会把整个应用编译为一个静态的 WEB 应用，将在项目的 html/build/dist/ 文件夹下生产 JavaScript、HTML、asset 文件，这些文件组成的静态 WEB 应用可以脱离 Java 环境，部署在任何支持 HTML 和 JavaScript 的 WEB 服务器上，并通过任何支持 WebGL 的浏览器上访问并运行。</p>
+<p>注意： 执行打包命令后，在 html/build/dist/ 目录下会生成一个 <code>WEB-INF</code> 文件夹，这个文件夹占用了较大的空间，对于一般的 WEB 服务器没有用，可以删掉。</p>
+<ol>
+<li>library 编译Jar包</li>
+</ol>
+<p><code>gradlew makeJar</code></p>
+<pre><code class="xml">task makeJar(type: Copy) {
+    delete &#39;libs/libmedia.jar&#39;
+    from(&#39;build/intermediates/bundles/default/&#39;)
+    into(&#39;libs/&#39;)
+    include(&#39;classes.jar&#39;)
+    rename (&#39;classes.jar&#39;, &#39;libmedia.jar&#39;)
+}
+makeJar.dependsOn(build)
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> gradle </tag>
+            
+            <tag> 面试 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Chrome插件目录]]></title>
+      <url>/2016/08/13/chrome-plugin-location/</url>
+      <content type="html"><![CDATA[<h2 id="Chrome插件目录"><a href="#Chrome插件目录" class="headerlink" title="Chrome插件目录"></a>Chrome插件目录</h2><p>Ubuntu:      ~/.config/google-chrome/Default/Extensions</p>
+<p>Windows:   C:\Users\Administrator\AppData\Local\Google\Chrome\User Data/Default/Extensions/</p>
+<p>Mac OS X:   ./Library/Application Support/Google/Chrome/Default/Extensions</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> chrome </tag>
+            
+            <tag> chrome-plugin </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Linux常用压缩、解压对比]]></title>
+      <url>/2016/01/15/zip-unzip-compare/</url>
+      <content type="html"><![CDATA[<p>先上结论:</p>
+<p><code>结论</code>：<br>是空间与时间的选择。</p>
+<p>压缩比率：<br>tar.bz2&gt;tgz&gt;tar</p>
+<p>占用空间：<br>tar.bz2&lt;tgz&lt;tar</p>
+<p>打包耗时:<br>tar.bz2&gt;tgz&gt;tar</p>
+<p>解压耗时:<br>tar.bz2&gt;tar&gt;tgz</p>
+<p>Linux下对于占用空间与耗费时间的折衷多选用<code>tgz</code>格式，不仅压缩率较高，而且打包、解压的时间都较为快速，是较为理想的选择。</p>
+<p>所以我选择<code>tgz</code>.</p>
+<p>常用的格式有：<br>tar, tar.gz(tgz), tar.bz2,</p>
+<p>不同方式，压缩和解压方式所耗CPU时间和压缩比率也差异也比较大。</p>
+<h2 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h2><p>只是打包动作，相当于归档处理，不做压缩；解压也一样，只是把归档文件释放出来。</p>
+<p>(1)打包归档格式：</p>
+<pre><code class="bash">tar -cvf examples.tar files|dir
+</code></pre>
+<p><code>说明：</code></p>
+<pre><code class="xml">-c, --create  create a new archive 创建一个归档文件
+-v, --verbose verbosely list files processed 显示创建归档文件的进程
+-f, --file=ARCHIVE use archive file or device ARCHIVE  后面要立刻接被处理的档案名,比如--file=examples.tar
+</code></pre>
+<p><code>举例：</code></p>
+<pre><code class="bash">tar -cvf file.tar file1       #file1文件
+tar -cvf file.tar file1 file2 #file1，file2文件
+tar -cvf file.tar dir         #dir目录
+</code></pre>
+<p>(2)释放解压格式：</p>
+<pre><code class="bash">tar -xvf examples.tar （解压至当前目录下）
+tar -xvf examples.tar  -C /path (/path 解压至其它路径)
+</code></pre>
+<p><code>说明：</code></p>
+<pre><code class="xml">-x, --extract, extract files from an archive 从一个归档文件中提取文件
+</code></pre>
+<p><code>举例：</code></p>
+<pre><code class="bash">tar -xvf file.tar
+tar -xvf file.tar -C /temp  #解压到temp目录下
+</code></pre>
+<h2 id="tar-gz-tgz"><a href="#tar-gz-tgz" class="headerlink" title="tar.gz tgz"></a>tar.gz tgz</h2><p><code>tar.gz和tgz只是两种不同的书写方式，后者是一种简化书写，等同处理</code></p>
+<p>这种格式是Linux下使用非常普遍的一种压缩方式，<br>兼顾了压缩时间（耗费CPU）和压缩空间（压缩比率）<br>其实这是对tar包进行gzip算法的压缩</p>
+<p>(1)打包压缩格式：</p>
+<pre><code class="bash">tar -zcvf examples.tgz examples (examples当前执行路径下的目录)
+</code></pre>
+<p><code>说明：</code></p>
+<pre><code class="xml">-z, --gzip filter the archive through gzip 通过gzip压缩的形式对文件进行归档
+</code></pre>
+<p><code>举例：</code></p>
+<pre><code class="bash">tar -zcvf file.tgz dir #dir目录
+</code></pre>
+<p>(2)释放解压格式：</p>
+<pre><code class="bash">tar -zxvf examples.tar （解压至当前执行目录下）
+tar -zxvf examples.tar  -C /path (/path 解压至其它路径)
+</code></pre>
+<p><code>举例：</code></p>
+<pre><code class="xml">tar -zcvf file.tgz
+tar -zcvf file.tgz -C /temp
+</code></pre>
+<h2 id="tar-bz"><a href="#tar-bz" class="headerlink" title="tar.bz"></a>tar.bz</h2><p>Linux下压缩比率较tgz大，即压缩后占用更小的空间，使得压缩包看起来更小。<br>但同时在压缩，解压的过程却是非常耗费CPU时间。</p>
+<p>(1)打包压缩格式：</p>
+<pre><code class="bash">tar -jcvf examples.tar.bz2 examples   (examples为当前执行路径下的目录)
+</code></pre>
+<p><code>说明：</code></p>
+<pre><code class="xml">-j, --bzip2 filter the archive through bzip2 通过bzip2压缩的形式对文件进行归档
+</code></pre>
+<p><code>举例：</code></p>
+<pre><code class="xml">tar -jcvf file.tar.bz2 dir #dir目录
+</code></pre>
+<p>(2)释放解压：</p>
+<pre><code class="bash">tar -jxvf examples.tar.bz2 （解压至当前执行目录下）
+tar -jxvf examples.tar.bz2  -C /path (/path 解压至其它路径)
+</code></pre>
+<p><code>举例：</code></p>
+<pre><code class="xml">tar -jxvf file.tar.bz2
+tar -jxvf file.tar.bz2 -C /temp
+</code></pre>
+<h2 id="gz"><a href="#gz" class="headerlink" title="gz"></a>gz</h2><p>压缩：</p>
+<pre><code class="bash">gzip -d examples.gz examples
+</code></pre>
+<p>解压：</p>
+<pre><code class="bash">gunzip examples.gz
+</code></pre>
+<h2 id="zip"><a href="#zip" class="headerlink" title="zip"></a>zip</h2><p>zip 格式是开放且免费的，所以广泛使用在 Windows、Linux、MacOS 平台，要说 zip 有什么缺点的话，就是它的压缩率并不是很高，不如 rar及 tar.gz 等格式。<br>压缩：</p>
+<pre><code class="bash">zip -r examples.zip examples (examples为目录)
+</code></pre>
+<p>解压：</p>
+<pre><code class="bash">zip examples.zip
+</code></pre>
+<h2 id="rar"><a href="#rar" class="headerlink" title=".rar"></a>.rar</h2><p>压缩：</p>
+<pre><code class="bash">rar -a examples.rar examples
+</code></pre>
+<p>解压：</p>
+<pre><code class="bash">rar -x examples.rar
+</code></pre>
+<p>压缩比率，占用时间对比</p>
+<p>为了保证能够让压缩比率较为明显，需选取一个内容较多、占用空间较大的目录作为本次实验的测试。<br>找了一个大概有23G的目录来测试,首先要明确由于执行环境的变化，误差在所难免</p>
+<p>首先明确一个概念：<br>压缩比率=原内容大小/压缩后大小，压缩比率越大，则表明压缩后占用空间的压缩包越小</p>
+<p><img src="https://user-images.githubusercontent.com/35097187/44308296-60b34600-a3e5-11e8-9dd0-35f605880467.png" alt=""></p>
+<p>转自:<a href="https://www.cnblogs.com/joshua317/p/6170839.html" target="_blank" rel="noopener">https://www.cnblogs.com/joshua317/p/6170839.html</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 工具 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 压缩 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[跨进程通讯的4种方式]]></title>
+      <url>/2015/08/10/access-across-processes/</url>
+      <content type="html"><![CDATA[<h2 id="方式一：访问其他应用程序的Activity"><a href="#方式一：访问其他应用程序的Activity" class="headerlink" title="方式一：访问其他应用程序的Activity"></a>方式一：访问其他应用程序的Activity</h2><p>在android系统中有很多应用程序提供了可以跨进程访问的Activity，例如，下面的代码可以直接调用拨打电话的Activity。<br>Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse(“tel:12345678” );<br>startActivity(callIntent);</p>
+<p>android:exported：</p>
+<p>default value的值是根据是否有<intent-filter>来决定的，有的话，默认值就是true，没有的话默认值就是false；</intent-filter></p>
+<p>如果被设置为了false，那么这个Activity将只会被当前Application或者拥有同样user ID的Application的组件调用。</p>
+<h2 id="方式二：Content-Provider"><a href="#方式二：Content-Provider" class="headerlink" title="方式二：Content Provider"></a>方式二：Content Provider</h2><p>使用文件或数据库SqlLite来存储数据</p>
+<h2 id="方式三：广播（Broadcast）"><a href="#方式三：广播（Broadcast）" class="headerlink" title="方式三：广播（Broadcast）"></a>方式三：广播（Broadcast）</h2><h2 id="方式四：AIDL服务"><a href="#方式四：AIDL服务" class="headerlink" title="方式四：AIDL服务"></a>方式四：AIDL服务</h2><p>AIDL 并不需要权限</p>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
+            
+            <tag> 面试 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+  
+  
+</search>
