@@ -145,6 +145,10 @@
     </li>
     
     <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">android2.3.1</a>
+    </li>
+    
+    <li class="article-tag-list-item">
         <a href="javascript:" class="color3">压缩</a>
     </li>
     
@@ -157,7 +161,11 @@
     </li>
     
     <li class="article-tag-list-item">
-        <a href="javascript:" class="color3">android2.3.1</a>
+        <a href="javascript:" class="color2">chrome</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color4">chrome-plugin</a>
     </li>
     
     <li class="article-tag-list-item">
@@ -166,14 +174,6 @@
     
     <li class="article-tag-list-item">
         <a href="javascript:" class="color5">lineageos</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a href="javascript:" class="color2">chrome</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a href="javascript:" class="color4">chrome-plugin</a>
     </li>
     
     <li class="article-tag-list-item">
@@ -193,11 +193,11 @@
     </li>
     
     <li class="article-tag-list-item">
-        <a href="javascript:" class="color2">3-hexo</a>
+        <a href="javascript:" class="color5">keys</a>
     </li>
     
     <li class="article-tag-list-item">
-        <a href="javascript:" class="color5">keys</a>
+        <a href="javascript:" class="color2">3-hexo</a>
     </li>
     
     <li class="article-tag-list-item">
@@ -234,6 +234,14 @@
             <span class="post-date" title="2018-02-01 11:37:02">2018/02/01</span>
         </a>
         
+        <a  class="Android "
+           href="/2018/08/13/android2.3.1-build/"
+           data-tag="android2.3.1"
+           data-author="" >
+            <span class="post-title" title="android2.3.1编译">android2.3.1编译</span>
+            <span class="post-date" title="2018-08-13 14:35:48">2018/08/13</span>
+        </a>
+        
         <a  class="工具 "
            href="/2016/01/15/zip-unzip-compare/"
            data-tag="压缩"
@@ -250,22 +258,6 @@
             <span class="post-date" title="2017-01-15 22:54:34">2017/01/15</span>
         </a>
         
-        <a  class="Android "
-           href="/2018/08/13/android2.3.1-build/"
-           data-tag="android2.3.1"
-           data-author="" >
-            <span class="post-title" title="android2.3.1编译">android2.3.1编译</span>
-            <span class="post-date" title="2018-08-13 14:35:48">2018/08/13</span>
-        </a>
-        
-        <a  class="Android "
-           href="/2018/01/05/Build-LineageOS-for-Nexus-5/"
-           data-tag="android,cm,lineageos"
-           data-author="" >
-            <span class="post-title" title="Build LineageOS for Nexus 5">Build LineageOS for Nexus 5</span>
-            <span class="post-date" title="2018-01-05 12:05:21">2018/01/05</span>
-        </a>
-        
         <a  class="工具 "
            href="/2016/08/13/chrome-plugin-location/"
            data-tag="chrome,chrome-plugin"
@@ -280,6 +272,14 @@
            data-author="" >
             <span class="post-title" title="多语言下，String子串可点击并实现跳转">多语言下，String子串可点击并实现跳转</span>
             <span class="post-date" title="2018-01-22 17:53:49">2018/01/22</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/01/05/Build-LineageOS-for-Nexus-5/"
+           data-tag="android,cm,lineageos"
+           data-author="" >
+            <span class="post-title" title="Build LineageOS for Nexus 5">Build LineageOS for Nexus 5</span>
+            <span class="post-date" title="2018-01-05 12:05:21">2018/01/05</span>
         </a>
         
         <a  class="Android "
@@ -323,6 +323,14 @@
         </a>
         
         <a  class="工具 "
+           href="/2018/01/23/tool-software-keys/"
+           data-tag="tools,keys"
+           data-author="" >
+            <span class="post-title" title="工具软件keys">工具软件keys</span>
+            <span class="post-date" title="2018-01-23 14:35:48">2018/01/23</span>
+        </a>
+        
+        <a  class="工具 "
            href="/2018/01/23/tool-softwares-and-plugins/"
            data-tag="tools"
            data-author="" >
@@ -336,14 +344,6 @@
            data-author="" >
             <span class="post-title" title="快捷键说明">快捷键说明</span>
             <span class="post-date" title="2017-12-30 16:45:31">2017/12/30</span>
-        </a>
-        
-        <a  class="工具 "
-           href="/2018/01/23/tool-software-keys/"
-           data-tag="tools,keys"
-           data-author="" >
-            <span class="post-title" title="工具软件keys">工具软件keys</span>
-            <span class="post-date" title="2018-01-23 14:35:48">2018/01/23</span>
         </a>
         
         <a  class="Android "
@@ -663,7 +663,7 @@ makeJar.dependsOn(build)
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': ['#ssr','#android','#binder','#压缩','#gradle','#面试','#android2.3.1','#cm','#lineageos','#chrome','#chrome-plugin','#contacts','#tools','#hexo','#blog','#3-hexo','#keys','#english','#正则表达式',],
+            'data': ['#ssr','#android','#binder','#android2.3.1','#压缩','#gradle','#面试','#chrome','#chrome-plugin','#cm','#lineageos','#contacts','#tools','#hexo','#blog','#keys','#3-hexo','#english','#正则表达式',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');
