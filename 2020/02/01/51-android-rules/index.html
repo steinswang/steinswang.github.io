@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>开机导入Sim卡联系人 | steinswang</title>
-  <meta name="keywords" content=" android , 面试 , contacts ">
-  <meta name="description" content="开机导入Sim卡联系人 | steinswang">
+  <title>51-android-rules | steinswang</title>
+  <meta name="keywords" content=" android , rules ">
+  <meta name="description" content="51-android-rules | steinswang">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="##前言 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;一直想系统的把android的内容重新捋一遍，今天京东优惠，66入了《Android系统源代码情景分析》，这书是基于android2.3.1来说明的，为了和方便真机编译与调试，入了nexus s. 好了话不多说，直接上 命令以及error的fix工作. android2.3.1编译我的环境: 系统环境为ubuntu 14.04 jdk使用">
 <meta name="keywords" content="android2.3.1">
@@ -388,9 +388,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-import-Sim-card-contacts-when-boot" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-51-android-rules" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">开机导入Sim卡联系人</h1>
+        <h1 class="article-title">51-android-rules</h1>
     
     <div class="article-meta">
         
@@ -407,21 +407,19 @@
             
             <a href="javascript:" class="color3">android</a>
             
-            <a href="javascript:" class="color3">面试</a>
-            
-            <a href="javascript:" class="color4">contacts</a>
+            <a href="javascript:" class="color1">rules</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-03 11:15:26'>2018-01-15 22:54</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-03 11:29:41'>2020-02-01 11:37</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:293</span>
+        <span>字数:7</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -451,7 +449,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ContactsProvider"><span class="toc-text">ContactsProvider</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Contacts"><span class="toc-text">Contacts</span></a></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -466,13 +464,8 @@
 </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="ContactsProvider"><a href="#ContactsProvider" class="headerlink" title="ContactsProvider"></a>ContactsProvider</h2><p>１.ContactsProvider.apk会启动一个广播接收器SystemStartReceiver来接收BOOT_COMPLETED的广播。</p>
-<p>２.ContactsProvider收到该广播后，将raw_contacts表里所有非本地联系人的数据都删除掉。<br>然后读取当前是否存在Sim卡，若存在，则发SYNC_ICC_CARD_CONTACTS广播。</p>
-<p>3.SystemStartReceiver收到广播后启动一个thread来执行读取sim卡联系人，并发送MSG_NOTIFY_ICC_LOADING的message给主线程，主线程收到后发loadicccontacts广播。</p>
-<p>4.开始读取ICC数据库的内容，IccProvider中会执行loadFromEf()，获得IIccPhoneBook接口，通过AIDL调用getAdnRecordsInEf()方法，获取sim卡上的全部联系人数据，返回cursor并装载成ArrayList。</p>
-<p>5.子线程给主线程发送MSG_NOTIFY_ICC_CHECKFINISHING的message，表示ICC读取完毕。主线程会发loadicccontacts广播。</p>
-<p>6.子线程发送消息MSG_INSERT_NEW_CONTACTS给主线程，进行数据库批量处理的操作，即把几个ContentProviderOperation打包在一起，Transaction事务机制，通过applyBatch()方法，主线程将这些sim卡联系人逐个的添加到raw_contacts表和data表中.</p>
-<h2 id="Contacts"><a href="#Contacts" class="headerlink" title="Contacts"></a>Contacts</h2><p>Contacts 收到loadicccontacts的广播，设置当前sim卡联系人已经开始读取，LOADICC_START<br>Contacts 收到loadicccontacts的广播，设置当前sim卡联系人已经读取完毕，LOADICC_FINISH</p>
+        <pre><code class="xml">SUBSYSTEM==&quot;usb&quot; ENV{DEVTYPE}==&quot;usb_device&quot;, MODE=&quot;0666&quot;
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 450603622@qq.com </span>
@@ -482,12 +475,12 @@
 
 
 <div class="article_copyright">
-    <p><span>文章标题:</span>开机导入Sim卡联系人</p>
-    <p><span>文章字数:</span><span class="post-count">293</span></p>
+    <p><span>文章标题:</span>51-android-rules</p>
+    <p><span>文章字数:</span><span class="post-count">7</span></p>
     <p><span>本文作者:</span><a href="javascript:void(0)" title="steinswang">steinswang</a></p>
-    <p><span>发布时间:</span>2018-01-15, 22:54:34</p>
-    <p><span>最后更新:</span>2020-02-03, 11:15:26</p>
-    <span>原始链接:</span><a class="post-url" href="/2018/01/15/import-Sim-card-contacts-when-boot/" title="开机导入Sim卡联系人">http://yoursite.com/2018/01/15/import-Sim-card-contacts-when-boot/</a>
+    <p><span>发布时间:</span>2020-02-01, 11:37:02</p>
+    <p><span>最后更新:</span>2020-02-03, 11:29:41</p>
+    <span>原始链接:</span><a class="post-url" href="/2020/02/01/51-android-rules/" title="51-android-rules">http://yoursite.com/2020/02/01/51-android-rules/</a>
     <p>
         <span>版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>

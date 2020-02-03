@@ -3,21 +3,24 @@
   
     
     <entry>
-      <title><![CDATA[ssr-ip]]></title>
-      <url>/2019/01/08/ssr-ip/</url>
-      <content type="html"><![CDATA[<p>144.202.122.98</p>
+      <title><![CDATA[51-android-rules]]></title>
+      <url>/2020/02/01/51-android-rules/</url>
+      <content type="html"><![CDATA[<pre><code class="xml">SUBSYSTEM==&quot;usb&quot; ENV{DEVTYPE}==&quot;usb_device&quot;, MODE=&quot;0666&quot;
+</code></pre>
 ]]></content>
       
         <categories>
             
-            <category> ssr </category>
+            <category> Android </category>
             
         </categories>
         
         
         <tags>
             
-            <tag> ssr </tag>
+            <tag> android </tag>
+            
+            <tag> rules </tag>
             
         </tags>
         
@@ -157,7 +160,7 @@ cd ~/sublime-text-imfix
 <p>授权秘钥：</p>
 <pre><code class="xml">GBPduHjWfJU1mZqcPM3BikjYKF6xKhlKIys3i1MU2eJHqWGImDHzWdD6xhMNLGVpbP2M5SN6bnxn2kSE8qHqNY5QaaRxmO3YSMHxlv2EYpjdwLcPwfeTG7kUdnhKE0vVy4RidP6Y2wZ0q74f47fzsZo45JE2hfQBFi2O9Jldjp1mW8HUpTtLA2a5/sQytXJUQl/QKO0jUQY4pa5CCx20sV1ClOTZtAGngSOJtIOFXK599sBr5aIEFyH0K7H4BoNMiiDMnxt1rD8Vb/ikJdhGMMQr0R4B+L3nWU97eaVPTRKfWGDE8/eAgKzpGwrQQoDh+nzX1xoVQ8NAuH+s4UcSeQ==
 </code></pre>
-<h2 id="sublime-text3"><a href="#sublime-text3" class="headerlink" title="sublime text3:"></a>sublime text3:</h2><pre><code class="xml">----- BEGIN LICENSE -----
+<h2 id="sublime-text3-Build-3143"><a href="#sublime-text3-Build-3143" class="headerlink" title="sublime text3 Build 3143:"></a>sublime text3 Build 3143:</h2><pre><code class="xml">----- BEGIN LICENSE -----
 eldon
 Single User License
 EA7E-1122628
@@ -225,101 +228,6 @@ B8EB32F8 8D415F8E F16FE657 A35381CC
         <tags>
             
             <tag> english </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[多语言下，String子串可点击并实现跳转]]></title>
-      <url>/2018/01/22/substring-jump/</url>
-      <content type="html"><![CDATA[<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过Spannable实现色彩效果，ClickableSpan实现点击。</p>
-<p>对于resource string，通过添加标签位，来计算不同语言下，可点击的substring的index</p>
-<h2 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h2><pre><code class="java">//LinkifyUtils.java
-public class LinkifyUtils {
-    private static final String PLACE_HOLDER_LINK_BEGIN = &quot;LINK_BEGIN&quot;;
-    private static final String PLACE_HOLDER_LINK_END = &quot;LINK_END&quot;;
-
-    private LinkifyUtils() {
-    }
-
-    /** Interface that handles the click event of the link */
-    public interface OnClickListener {
-        void onClick();
-    }
-
-    /**
-     * Applies the text into the {@link TextView} and part of it a clickable link.
-     * The text surrounded with &quot;LINK_BEGIN&quot; and &quot;LINK_END&quot; will become a clickable link. Only
-     * supports at most one link.
-     * @return true if the link has been successfully applied, or false if the original text
-     *         contains no link place holders.
-     */
-    public static boolean linkify(TextView textView, StringBuilder text,
-                                  final OnClickListener listener) {
-        // Remove place-holders from the string and record their positions
-        final int beginIndex = text.indexOf(PLACE_HOLDER_LINK_BEGIN);
-        if (beginIndex == -1) {
-            textView.setText(text);
-            return false;
-        }
-        text.delete(beginIndex, beginIndex + PLACE_HOLDER_LINK_BEGIN.length());
-        final int endIndex = text.indexOf(PLACE_HOLDER_LINK_END);
-        if (endIndex == -1) {
-            textView.setText(text);
-            return false;
-        }
-        text.delete(endIndex, endIndex + PLACE_HOLDER_LINK_END.length());
-
-        textView.setText(text.toString(), TextView.BufferType.SPANNABLE);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        Spannable spannableContent = (Spannable) textView.getText();
-        ClickableSpan spannableLink = new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                listener.onClick();
-            }
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(false);
-            }
-        };
-        spannableContent.setSpan(spannableLink, beginIndex, endIndex,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return true;
-    }
-}
-</code></pre>
-<h2 id="UI界面"><a href="#UI界面" class="headerlink" title="UI界面"></a>UI界面</h2><pre><code class="java">//XXXActivity.java
-        StringBuilder contentBuilder = new StringBuilder();
-        contentBuilder.append(getText(R.string.no_internet));
-        LinkifyUtils.linkify(tvEmpty, contentBuilder, new LinkifyUtils.OnClickListener() {
-            @Override
-            public void onClick() {
-                Intent intent = new Intent();
-                intent.setClassName(&quot;com.android.settings&quot;, &quot;com.android.settings.wifi.WifiSettings&quot;);
-                startActivity(intent);
-            }
-        });
-</code></pre>
-<pre><code class="xml">&lt;string name=&quot;no_internet&quot;&gt;No internet connection. Make sure  &lt;xliff:g id=&quot;link_begin&quot;&gt;LINK_BEGIN&lt;/xliff:g&gt;Wi-Fi&lt;xliff:g id=&quot;link_end&quot;&gt;LINK_END&lt;/xliff:g&gt; is turned on, then try again.&lt;/string&gt;
-
-&lt;string name=&quot;no_internet&quot;&gt;未连接到互联网。请确保  &lt;xliff:g id=&quot;link_begin&quot;&gt;LINK_BEGIN&lt;/xliff:g&gt;Wi-Fi&lt;xliff:g id=&quot;link_end&quot;&gt;LINK_END&lt;/xliff:g&gt; 网路已开启，然后重试。&lt;/string&gt;
-</code></pre>
-]]></content>
-      
-        <categories>
-            
-            <category> Android </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> android </tag>
             
         </tags>
         
@@ -844,6 +752,101 @@ fieldView.addTextChangedListener(new TextWatcher()  //注册TextChangedListener
             <tag> android </tag>
             
             <tag> contacts </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[多语言下，String子串可点击并实现跳转]]></title>
+      <url>/2018/01/22/substring-jump/</url>
+      <content type="html"><![CDATA[<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过Spannable实现色彩效果，ClickableSpan实现点击。</p>
+<p>对于resource string，通过添加标签位，来计算不同语言下，可点击的substring的index</p>
+<h2 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h2><pre><code class="java">//LinkifyUtils.java
+public class LinkifyUtils {
+    private static final String PLACE_HOLDER_LINK_BEGIN = &quot;LINK_BEGIN&quot;;
+    private static final String PLACE_HOLDER_LINK_END = &quot;LINK_END&quot;;
+
+    private LinkifyUtils() {
+    }
+
+    /** Interface that handles the click event of the link */
+    public interface OnClickListener {
+        void onClick();
+    }
+
+    /**
+     * Applies the text into the {@link TextView} and part of it a clickable link.
+     * The text surrounded with &quot;LINK_BEGIN&quot; and &quot;LINK_END&quot; will become a clickable link. Only
+     * supports at most one link.
+     * @return true if the link has been successfully applied, or false if the original text
+     *         contains no link place holders.
+     */
+    public static boolean linkify(TextView textView, StringBuilder text,
+                                  final OnClickListener listener) {
+        // Remove place-holders from the string and record their positions
+        final int beginIndex = text.indexOf(PLACE_HOLDER_LINK_BEGIN);
+        if (beginIndex == -1) {
+            textView.setText(text);
+            return false;
+        }
+        text.delete(beginIndex, beginIndex + PLACE_HOLDER_LINK_BEGIN.length());
+        final int endIndex = text.indexOf(PLACE_HOLDER_LINK_END);
+        if (endIndex == -1) {
+            textView.setText(text);
+            return false;
+        }
+        text.delete(endIndex, endIndex + PLACE_HOLDER_LINK_END.length());
+
+        textView.setText(text.toString(), TextView.BufferType.SPANNABLE);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        Spannable spannableContent = (Spannable) textView.getText();
+        ClickableSpan spannableLink = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                listener.onClick();
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+        spannableContent.setSpan(spannableLink, beginIndex, endIndex,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return true;
+    }
+}
+</code></pre>
+<h2 id="UI界面"><a href="#UI界面" class="headerlink" title="UI界面"></a>UI界面</h2><pre><code class="java">//XXXActivity.java
+        StringBuilder contentBuilder = new StringBuilder();
+        contentBuilder.append(getText(R.string.no_internet));
+        LinkifyUtils.linkify(tvEmpty, contentBuilder, new LinkifyUtils.OnClickListener() {
+            @Override
+            public void onClick() {
+                Intent intent = new Intent();
+                intent.setClassName(&quot;com.android.settings&quot;, &quot;com.android.settings.wifi.WifiSettings&quot;);
+                startActivity(intent);
+            }
+        });
+</code></pre>
+<pre><code class="xml">&lt;string name=&quot;no_internet&quot;&gt;No internet connection. Make sure  &lt;xliff:g id=&quot;link_begin&quot;&gt;LINK_BEGIN&lt;/xliff:g&gt;Wi-Fi&lt;xliff:g id=&quot;link_end&quot;&gt;LINK_END&lt;/xliff:g&gt; is turned on, then try again.&lt;/string&gt;
+
+&lt;string name=&quot;no_internet&quot;&gt;未连接到互联网。请确保  &lt;xliff:g id=&quot;link_begin&quot;&gt;LINK_BEGIN&lt;/xliff:g&gt;Wi-Fi&lt;xliff:g id=&quot;link_end&quot;&gt;LINK_END&lt;/xliff:g&gt; 网路已开启，然后重试。&lt;/string&gt;
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> Android </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> android </tag>
             
         </tags>
         
