@@ -6,17 +6,17 @@
   <meta name="keywords" content=" android , contacts ">
   <meta name="description" content="联系人号码模糊查询 | steinswang">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="##前言 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;一直想系统的把android的内容重新捋一遍，今天京东优惠，66入了《Android系统源代码情景分析》，这书是基于android2.3.1来说明的，为了和方便真机编译与调试，入了nexus s. 好了话不多说，直接上 命令以及error的fix工作. android2.3.1编译我的环境: 系统环境为ubuntu 14.04 jdk使用">
-<meta name="keywords" content="android2.3.1">
+<meta name="description" content="SUBSYSTEM==&amp;quot;usb&amp;quot; ENV{DEVTYPE}==&amp;quot;usb_device&amp;quot;, MODE=&amp;quot;0666&amp;quot;">
+<meta name="keywords" content="android,rules">
 <meta property="og:type" content="article">
-<meta property="og:title" content="android2.3.1编译">
-<meta property="og:url" content="http://yoursite.com/2018/08/13/android2.3.1-build/index.html">
+<meta property="og:title" content="51-android-rules">
+<meta property="og:url" content="http://yoursite.com/2020/02/01/51-android-rules/index.html">
 <meta property="og:site_name" content="steinswang">
-<meta property="og:description" content="##前言 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;一直想系统的把android的内容重新捋一遍，今天京东优惠，66入了《Android系统源代码情景分析》，这书是基于android2.3.1来说明的，为了和方便真机编译与调试，入了nexus s. 好了话不多说，直接上 命令以及error的fix工作. android2.3.1编译我的环境: 系统环境为ubuntu 14.04 jdk使用">
-<meta property="og:updated_time" content="2020-02-03T03:15:26.368Z">
+<meta property="og:description" content="SUBSYSTEM==&amp;quot;usb&amp;quot; ENV{DEVTYPE}==&amp;quot;usb_device&amp;quot;, MODE=&amp;quot;0666&amp;quot;">
+<meta property="og:updated_time" content="2020-02-03T03:29:41.444Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="android2.3.1编译">
-<meta name="twitter:description" content="##前言 &amp;ensp;&amp;ensp;&amp;ensp;&amp;ensp;一直想系统的把android的内容重新捋一遍，今天京东优惠，66入了《Android系统源代码情景分析》，这书是基于android2.3.1来说明的，为了和方便真机编译与调试，入了nexus s. 好了话不多说，直接上 命令以及error的fix工作. android2.3.1编译我的环境: 系统环境为ubuntu 14.04 jdk使用">
+<meta name="twitter:title" content="51-android-rules">
+<meta name="twitter:description" content="SUBSYSTEM==&amp;quot;usb&amp;quot; ENV{DEVTYPE}==&amp;quot;usb_device&amp;quot;, MODE=&amp;quot;0666&amp;quot;">
 
 
 <link rel="icon" href="/img/avatar.jpg">
@@ -143,26 +143,6 @@
     </li>
     
     <li class="article-tag-list-item">
-        <a href="javascript:" class="color2">gradle</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a href="javascript:" class="color3">面试</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a href="javascript:" class="color3">压缩</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a href="javascript:" class="color2">chrome</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a href="javascript:" class="color4">chrome-plugin</a>
-    </li>
-    
-    <li class="article-tag-list-item">
         <a href="javascript:" class="color4">contacts</a>
     </li>
     
@@ -179,7 +159,31 @@
     </li>
     
     <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">压缩</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">chrome</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color4">chrome-plugin</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color2">gradle</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">面试</a>
+    </li>
+    
+    <li class="article-tag-list-item">
         <a href="javascript:" class="color1">tools</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a href="javascript:" class="color3">english</a>
     </li>
     
     <li class="article-tag-list-item">
@@ -191,19 +195,15 @@
     </li>
     
     <li class="article-tag-list-item">
+        <a href="javascript:" class="color1">正则表达式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
         <a href="javascript:" class="color5">keys</a>
     </li>
     
     <li class="article-tag-list-item">
         <a href="javascript:" class="color2">3-hexo</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a href="javascript:" class="color1">正则表达式</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a href="javascript:" class="color3">english</a>
     </li>
     
     <div class="clearfix"></div>
@@ -233,30 +233,6 @@
         </a>
         
         <a  class="Android "
-           href="/2017/01/15/gradle-issue/"
-           data-tag="gradle,面试"
-           data-author="" >
-            <span class="post-title" title="gradle问题">gradle问题</span>
-            <span class="post-date" title="2017-01-15 22:54:34">2017/01/15</span>
-        </a>
-        
-        <a  class="工具 "
-           href="/2016/01/15/zip-unzip-compare/"
-           data-tag="压缩"
-           data-author="" >
-            <span class="post-title" title="Linux常用压缩、解压对比">Linux常用压缩、解压对比</span>
-            <span class="post-date" title="2016-01-15 22:54:34">2016/01/15</span>
-        </a>
-        
-        <a  class="工具 "
-           href="/2016/08/13/chrome-plugin-location/"
-           data-tag="chrome,chrome-plugin"
-           data-author="" >
-            <span class="post-title" title="Chrome插件目录">Chrome插件目录</span>
-            <span class="post-date" title="2016-08-13 14:35:48">2016/08/13</span>
-        </a>
-        
-        <a  class="Android "
            href="/2018/01/22/contacts-source-structure-analysis/"
            data-tag="android,contacts"
            data-author="" >
@@ -280,6 +256,38 @@
             <span class="post-date" title="2018-01-05 12:05:21">2018/01/05</span>
         </a>
         
+        <a  class="工具 "
+           href="/2016/01/15/zip-unzip-compare/"
+           data-tag="压缩"
+           data-author="" >
+            <span class="post-title" title="Linux常用压缩、解压对比">Linux常用压缩、解压对比</span>
+            <span class="post-date" title="2016-01-15 22:54:34">2016/01/15</span>
+        </a>
+        
+        <a  class="工具 "
+           href="/2016/08/13/chrome-plugin-location/"
+           data-tag="chrome,chrome-plugin"
+           data-author="" >
+            <span class="post-title" title="Chrome插件目录">Chrome插件目录</span>
+            <span class="post-date" title="2016-08-13 14:35:48">2016/08/13</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2017/01/15/gradle-issue/"
+           data-tag="gradle,面试"
+           data-author="" >
+            <span class="post-title" title="gradle问题">gradle问题</span>
+            <span class="post-date" title="2017-01-15 22:54:34">2017/01/15</span>
+        </a>
+        
+        <a  class="Android "
+           href="/2018/01/15/import-Sim-card-contacts-when-boot/"
+           data-tag="android,contacts,面试"
+           data-author="" >
+            <span class="post-title" title="开机导入Sim卡联系人">开机导入Sim卡联系人</span>
+            <span class="post-date" title="2018-01-15 22:54:34">2018/01/15</span>
+        </a>
+        
         <a  class="Android "
            href="/2018/01/22/substring-jump/"
            data-tag="android"
@@ -296,20 +304,12 @@
             <span class="post-date" title="2018-01-01 11:37:02">2018/01/01</span>
         </a>
         
-        <a  class="Android "
-           href="/2018/01/15/import-Sim-card-contacts-when-boot/"
-           data-tag="android,面试,contacts"
+        <a  class="init "
+           href="/2017/12/23/blog-init/"
+           data-tag="tools"
            data-author="" >
-            <span class="post-title" title="开机导入Sim卡联系人">开机导入Sim卡联系人</span>
-            <span class="post-date" title="2018-01-15 22:54:34">2018/01/15</span>
-        </a>
-        
-        <a  class="Android "
-           href="/2018/01/16/merge-contacts/"
-           data-tag="android,contacts"
-           data-author="" >
-            <span class="post-title" title="合并重复联系人">合并重复联系人</span>
-            <span class="post-date" title="2018-01-16 10:00:00">2018/01/16</span>
+            <span class="post-title" title="blog init">blog init</span>
+            <span class="post-date" title="2017-12-23 14:53:20">2017/12/23</span>
         </a>
         
         <a  class="Android "
@@ -320,12 +320,20 @@
             <span class="post-date" title="2015-08-10 22:45:19">2015/08/10</span>
         </a>
         
-        <a  class="init "
-           href="/2017/12/23/blog-init/"
+        <a  class="工具 "
+           href="/2018/01/23/tool-softwares-and-plugins/"
            data-tag="tools"
            data-author="" >
-            <span class="post-title" title="blog init">blog init</span>
-            <span class="post-date" title="2017-12-23 14:53:20">2017/12/23</span>
+            <span class="post-title" title="工具软件&amp;插件">工具软件&amp;插件</span>
+            <span class="post-date" title="2018-01-23 14:53:20">2018/01/23</span>
+        </a>
+        
+        <a  class="英语 "
+           href="/2018/01/22/food-politics-in-America/"
+           data-tag="english"
+           data-author="" >
+            <span class="post-title" title="001-Food politics in America">001-Food politics in America</span>
+            <span class="post-date" title="2018-01-22 21:14:37">2018/01/22</span>
         </a>
         
         <a  class="工具 "
@@ -337,11 +345,11 @@
         </a>
         
         <a  class="工具 "
-           href="/2018/01/23/tool-softwares-and-plugins/"
-           data-tag="tools"
+           href="/2017/10/04/正则表达式详解/"
+           data-tag="正则表达式"
            data-author="" >
-            <span class="post-title" title="工具软件&amp;插件">工具软件&amp;插件</span>
-            <span class="post-date" title="2018-01-23 14:53:20">2018/01/23</span>
+            <span class="post-title" title="正则表达式详解">正则表达式详解</span>
+            <span class="post-date" title="2017-10-04 09:41:40">2017/10/04</span>
         </a>
         
         <a  class="工具 "
@@ -360,20 +368,12 @@
             <span class="post-date" title="2017-12-30 16:45:31">2017/12/30</span>
         </a>
         
-        <a  class="工具 "
-           href="/2017/10/04/正则表达式详解/"
-           data-tag="正则表达式"
+        <a  class="Android "
+           href="/2018/01/16/merge-contacts/"
+           data-tag="android,contacts"
            data-author="" >
-            <span class="post-title" title="正则表达式详解">正则表达式详解</span>
-            <span class="post-date" title="2017-10-04 09:41:40">2017/10/04</span>
-        </a>
-        
-        <a  class="英语 "
-           href="/2018/01/22/food-politics-in-America/"
-           data-tag="english"
-           data-author="" >
-            <span class="post-title" title="001-Food politics in America">001-Food politics in America</span>
-            <span class="post-date" title="2018-01-22 21:14:37">2018/01/22</span>
+            <span class="post-title" title="合并重复联系人">合并重复联系人</span>
+            <span class="post-date" title="2018-01-16 10:00:00">2018/01/16</span>
         </a>
         
     </nav>
@@ -541,7 +541,7 @@
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': ['#android','#rules','#binder','#gradle','#面试','#压缩','#chrome','#chrome-plugin','#contacts','#android2.3.1','#cm','#lineageos','#tools','#hexo','#blog','#keys','#3-hexo','#正则表达式','#english',],
+            'data': ['#android','#rules','#binder','#contacts','#android2.3.1','#cm','#lineageos','#压缩','#chrome','#chrome-plugin','#gradle','#面试','#tools','#english','#hexo','#blog','#正则表达式','#keys','#3-hexo',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');
